@@ -9,7 +9,7 @@
 - [`addons/`](addons) — дополнения сообщества, по папке на игру;
 - [`docs/format.md`](docs/format.md) — формат `addon.json`: все поля, правила и примеры;
 - [`schema/addon.schema.json`](schema/addon.schema.json) — JSON-схема: с ней редактор подсказывает поля и подчёркивает ошибки;
-- [`examples/`](examples) — примеры: Minecraft и Rust (они уже встроены в приложение) и Terraria — сервер с инструкцией.
+- [`examples/`](examples) — дополнения, встроенные в приложение, и пример Factorio — сервер с инструкцией.
 
 ## Как установить дополнение
 
@@ -26,7 +26,9 @@
 1. Скопируйте пример, который ближе к вашей игре:
    - [`examples/minecraft`](examples/minecraft/addon.json) — сервер скачивается по https с проверкой хэша, лицензия, настройки;
    - [`examples/rust`](examples/rust/addon.json) — выделенный сервер из Steam через SteamCMD, консоль по RCON;
-   - [`examples/terraria`](examples/terraria/addon.json) — сервер с инструкцией: его запускает хост сам.
+   - [`examples/factorio`](examples/factorio/addon.json) — сервер с инструкцией: хост запускает игру сам, приложение
+     подсказывает шаги и открывает порты друзьям; так же устроены [Valheim](examples/valheim/addon.json),
+     [Palworld](examples/palworld/addon.json) и другие встроенные игры.
 2. Откройте `addon.json` в VS Code: строка `"$schema"` включает подсказки по полям. Все поля описаны в
    [`docs/format.md`](docs/format.md).
 3. Проверьте файл программой `addon-check` — её можно скачать из
@@ -46,4 +48,7 @@
 | Игра | Папка | Вид | Автор |
 |---|---|---|---|
 
-Пока пусто — пришлите первое. Minecraft и Rust встроены в приложение, ставить их отсюда не нужно.
+Пока пусто — пришлите первое.
+
+Эти игры уже встроены в приложение, ставить их отсюда не нужно: Minecraft (Java и Bedrock), Rust, Valheim,
+7 Days to Die, Project Zomboid и Palworld. Их манифесты лежат в [`examples/`](examples) — с них удобно начинать своё.

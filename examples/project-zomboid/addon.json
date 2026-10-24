@@ -1,0 +1,30 @@
+{
+  "$schema": "https://raw.githubusercontent.com/kreker0001/ConnectTogether-Addons/main/schema/addon.schema.json",
+  "format": 1,
+  "id": "project-zomboid",
+  "name": "Project Zomboid",
+  "subtitle": "Сервер из главного меню игры",
+  "icon": "skull",
+  "version": "1.0.0",
+  "author": "Команда ConnectTogether",
+  "ports": [
+    { "id": "game", "protocol": "udp", "default": 16261, "expose": true },
+    { "id": "direct", "protocol": "udp", "default": 16262, "expose": true }
+  ],
+  "join": { "menuPath": [ "Присоединиться", "IP и порт — из адреса, имя и пароль — любые", "Подключиться" ], "template": "{address}" },
+  "guide": {
+    "hint": "Хост запускает сервер прямо из игры",
+    "startSteps": [
+      "В главном меню Project Zomboid выберите «Хост» (Host), настройте сервер и запустите его; порт оставьте 16261.",
+      "Дождитесь, пока сервер загрузится и вы окажетесь в игре.",
+      "Вернитесь сюда и нажмите «Проверить снова»."
+    ],
+    "stoppedTips": [
+      "Проверьте, не вышли ли вы с сервера в главное меню.",
+      "Запустите сервер снова тем же способом — мир, комната и код останутся прежними.",
+      "Нажмите «Проверить снова»."
+    ],
+    "helpUrl": "https://pzwiki.net/wiki/Dedicated_server",
+    "helpLabel": "Как запустить сервер Project Zomboid"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://raw.githubusercontent.com/kreker0001/ConnectTogether-Addons/main/schema/addon.schema.json",
+  "format": 1,
+  "id": "valheim",
+  "name": "Valheim",
+  "subtitle": "Valheim Dedicated Server",
+  "icon": "shield",
+  "version": "1.0.0",
+  "author": "Команда ConnectTogether",
+  "ports": [
+    { "id": "game", "protocol": "udp", "default": 2456, "expose": true },
+    { "id": "query", "protocol": "udp", "default": 2457, "expose": true }
+  ],
+  "join": { "menuPath": [ "Начать игру", "Присоединиться к игре", "Подключиться по IP" ], "template": "{address}" },
+  "guide": {
+    "hint": "Бесплатный выделенный сервер из Steam",
+    "startSteps": [
+      "В Steam откройте Библиотеку → Инструменты и установите Valheim Dedicated Server — он бесплатный.",
+      "В папке сервера откройте start_headless_server.bat в Блокноте: задайте -name, -world и -password (не короче 5 символов и не совпадает с именем), порт оставьте 2456.",
+      "Запустите start_headless_server.bat и дождитесь в его окне строки «Game server connected».",
+      "Вернитесь сюда и нажмите «Проверить снова»."
+    ],
+    "stoppedTips": [
+      "Проверьте, не закрылось ли окно сервера Valheim.",
+      "Запустите start_headless_server.bat снова — мир сохранится, комната и код останутся прежними.",
+      "Нажмите «Проверить снова»."
+    ],
+    "helpUrl": "https://www.valheimgame.com/support/a-guide-to-dedicated-servers/",
+    "helpLabel": "Как запустить сервер Valheim"
+  }
+}

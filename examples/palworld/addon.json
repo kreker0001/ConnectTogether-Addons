@@ -1,0 +1,30 @@
+{
+  "$schema": "https://raw.githubusercontent.com/kreker0001/ConnectTogether-Addons/main/schema/addon.schema.json",
+  "format": 1,
+  "id": "palworld",
+  "name": "Palworld",
+  "subtitle": "Palworld Dedicated Server",
+  "icon": "paw",
+  "version": "1.0.0",
+  "author": "Команда ConnectTogether",
+  "ports": [
+    { "id": "game", "protocol": "udp", "default": 8211, "expose": true }
+  ],
+  "join": { "menuPath": [ "Присоединиться к многопользовательской игре", "Поле адреса внизу экрана", "Подключиться" ], "template": "{address}" },
+  "guide": {
+    "hint": "Бесплатный выделенный сервер из Steam",
+    "startSteps": [
+      "В Steam откройте Библиотеку → Инструменты и установите Palworld Dedicated Server — он бесплатный.",
+      "Запустите его из Steam («Play Palworld Dedicated Server») или PalServer.exe из папки сервера; порт оставьте 8211.",
+      "Дождитесь окна сервера: значит, он запустился.",
+      "Вернитесь сюда и нажмите «Проверить снова»."
+    ],
+    "stoppedTips": [
+      "Проверьте, не закрылось ли окно Palworld Dedicated Server.",
+      "Запустите сервер снова — мир сохранится, комната и код останутся прежними.",
+      "Нажмите «Проверить снова»."
+    ],
+    "helpUrl": "https://docs.palworldgame.com/getting-started/deploy-dedicated-server",
+    "helpLabel": "Как запустить сервер Palworld"
+  }
+}

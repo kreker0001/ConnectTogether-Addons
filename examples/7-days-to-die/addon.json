@@ -1,0 +1,30 @@
+{
+  "$schema": "https://raw.githubusercontent.com/kreker0001/ConnectTogether-Addons/main/schema/addon.schema.json",
+  "format": 1,
+  "id": "7-days-to-die",
+  "name": "7 Days to Die",
+  "subtitle": "Игра по сети из самой игры",
+  "icon": "flame",
+  "version": "1.0.0",
+  "author": "Команда ConnectTogether",
+  "ports": [
+    { "id": "game", "protocol": "tcp", "default": 26900, "expose": true },
+    { "id": "game-udp", "protocol": "udp", "default": 26900, "expose": true },
+    { "id": "udp-1", "protocol": "udp", "default": 26901, "expose": true },
+    { "id": "udp-2", "protocol": "udp", "default": 26902, "expose": true }
+  ],
+  "join": { "menuPath": [ "Присоединиться к игре", "Подключиться по IP", "IP и порт — из адреса" ], "template": "{address}" },
+  "guide": {
+    "hint": "Хост запускает мир прямо из игры",
+    "startSteps": [
+      "Запустите 7 Days to Die и начните или продолжите игру; в настройках сервера оставьте порт 26900.",
+      "Дождитесь, пока мир загрузится и вы окажетесь в игре.",
+      "Вернитесь сюда и нажмите «Проверить снова»."
+    ],
+    "stoppedTips": [
+      "Проверьте, не вышли ли вы из мира в главное меню.",
+      "Загрузите тот же мир снова — комната и код останутся прежними.",
+      "Нажмите «Проверить снова»."
+    ]
+  }
+}

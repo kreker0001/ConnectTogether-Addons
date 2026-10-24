@@ -1,4 +1,5 @@
 # Проверка дополнений: на каждый pull request и после слияния в main.
+# Список --reserved — id игр, встроенных в приложение: своё дополнение с таким id приложение не примет.
 # addon-check проверяет теми же правилами, что приложение ConnectTogether, и правилами репозитория
 # (папка совпадает с id, id не повторяется и не занят встроенной игрой). Берётся из релиза этого репозитория.
 name: Проверка дополнений
@@ -31,7 +32,7 @@ jobs:
 
       - name: Дополнения сообщества
         run: |
-          "$RUNNER_TEMP/addon-check-linux-x64" --reserved minecraft,rust,custom addons
+          "$RUNNER_TEMP/addon-check-linux-x64" --reserved minecraft,rust,minecraft-bedrock,valheim,7-days-to-die,project-zomboid,palworld,custom addons
 
       - name: Примеры
         run: |

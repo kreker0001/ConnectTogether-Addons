@@ -10,7 +10,8 @@ ConnectTogether. Сеть остаётся за ConnectTogether: порты се
   ждёт готовности и даёт консоль. У хоста есть кнопка «Запустить мой сервер»: сервер стартует, и сразу открывается
   комната. Примеры: [Minecraft](../examples/minecraft/addon.json), [Rust](../examples/rust/addon.json);
 - **сервер с инструкцией** — без `launch`. Сервер запускает хост сам, а дополнение даёт порты для комнаты, шаги для
-  хоста и подсказку друзьям, куда ввести адрес. Пример: [Terraria](../examples/terraria/addon.json).
+  хоста и подсказку друзьям, куда ввести адрес. Примеры: [Factorio](../examples/factorio/addon.json),
+  [Valheim](../examples/valheim/addon.json), [Palworld](../examples/palworld/addon.json).
 
 ## Что видит пользователь
 
@@ -71,23 +72,28 @@ ConnectTogether. Сеть остаётся за ConnectTogether: порты се
 {
   "$schema": "https://raw.githubusercontent.com/kreker0001/ConnectTogether-Addons/main/schema/addon.schema.json",
   "format": 1,
-  "id": "terraria",
-  "name": "Terraria",
-  "subtitle": "Свой сервер TerrariaServer.exe",
+  "id": "factorio",
+  "name": "Factorio",
+  "subtitle": "Игра по сети из самой игры",
   "icon": "gamepad",
   "version": "1.0.0",
   "author": "Команда ConnectTogether",
-  "ports": [ { "id": "game", "protocol": "tcp", "default": 7777, "expose": true } ],
-  "join": { "menuPath": [ "Мультиплеер", "Присоединиться по IP" ] },
+  "ports": [ { "id": "game", "protocol": "udp", "default": 34197, "expose": true } ],
+  "join": { "menuPath": [ "Сетевая игра", "Подключиться по адресу" ] },
   "guide": {
-    "hint": "Сервер запускаете вы, адрес друзьям даёт ConnectTogether",
+    "hint": "Хост запускает игру из меню «Сетевая игра»",
     "startSteps": [
-      "Запустите TerrariaServer.exe из папки игры и выберите мир.",
-      "На вопрос о порте оставьте 7777, на вопрос о пробросе портов ответьте «n» — ConnectTogether сделает это сам.",
+      "Запустите Factorio: «Сетевая игра» → «Создать игру» и загрузите или создайте карту.",
+      "Порт оставьте 34197.",
       "Вернитесь сюда и нажмите «Проверить снова»."
     ],
-    "helpUrl": "https://terraria.wiki.gg/wiki/Server",
-    "helpLabel": "Как запустить сервер Terraria"
+    "stoppedTips": [
+      "Проверьте, не вышли ли вы из игры в главное меню.",
+      "Запустите игру по сети снова — комната и код останутся прежними.",
+      "Нажмите «Проверить снова»."
+    ],
+    "helpUrl": "https://wiki.factorio.com/Multiplayer",
+    "helpLabel": "Как играть в Factorio по сети"
   }
 }
 ```
@@ -143,7 +149,7 @@ ConnectTogether не раздаёт файлы серверов: только о
 
    ```
    addon-check-win-x64.exe addons\my-game\addon.json
-   addon-check-win-x64.exe --reserved minecraft,rust,custom addons
+   addon-check-win-x64.exe --reserved minecraft,rust,minecraft-bedrock,valheim,7-days-to-die,project-zomboid,palworld,custom addons
    ```
 
    Все ошибки выводятся сразу, с полем и причиной.

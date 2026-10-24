@@ -1,0 +1,27 @@
+{
+  "$schema": "https://raw.githubusercontent.com/kreker0001/ConnectTogether-Addons/main/schema/addon.schema.json",
+  "format": 1,
+  "id": "factorio",
+  "name": "Factorio",
+  "subtitle": "Игра по сети из самой игры",
+  "icon": "gamepad",
+  "version": "1.0.0",
+  "author": "Команда ConnectTogether",
+  "ports": [ { "id": "game", "protocol": "udp", "default": 34197, "expose": true } ],
+  "join": { "menuPath": [ "Сетевая игра", "Подключиться по адресу" ] },
+  "guide": {
+    "hint": "Хост запускает игру из меню «Сетевая игра»",
+    "startSteps": [
+      "Запустите Factorio: «Сетевая игра» → «Создать игру» и загрузите или создайте карту.",
+      "Порт оставьте 34197.",
+      "Вернитесь сюда и нажмите «Проверить снова»."
+    ],
+    "stoppedTips": [
+      "Проверьте, не вышли ли вы из игры в главное меню.",
+      "Запустите игру по сети снова — комната и код останутся прежними.",
+      "Нажмите «Проверить снова»."
+    ],
+    "helpUrl": "https://wiki.factorio.com/Multiplayer",
+    "helpLabel": "Как играть в Factorio по сети"
+  }
+}

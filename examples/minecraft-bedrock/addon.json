@@ -1,0 +1,29 @@
+{
+  "$schema": "https://raw.githubusercontent.com/kreker0001/ConnectTogether-Addons/main/schema/addon.schema.json",
+  "format": 1,
+  "id": "minecraft-bedrock",
+  "name": "Minecraft Bedrock",
+  "subtitle": "Bedrock Dedicated Server",
+  "icon": "cube",
+  "version": "1.0.0",
+  "author": "Команда ConnectTogether",
+  "ports": [
+    { "id": "game", "protocol": "udp", "default": 19132, "expose": true }
+  ],
+  "join": { "menuPath": [ "Играть", "Серверы", "Добавить сервер", "IP — в «Адрес», порт — в «Порт»" ], "template": "{address}" },
+  "guide": {
+    "hint": "Bedrock Dedicated Server с minecraft.net",
+    "startSteps": [
+      "Скачайте Bedrock Dedicated Server для Windows с minecraft.net и распакуйте его в отдельную папку.",
+      "Запустите bedrock_server.exe и дождитесь в его окне строки «Server started.».",
+      "Вернитесь сюда и нажмите «Проверить снова»."
+    ],
+    "stoppedTips": [
+      "Проверьте, не закрылось ли окно bedrock_server.exe.",
+      "Запустите bedrock_server.exe снова — мир сохранится, комната и код останутся прежними.",
+      "Нажмите «Проверить снова»."
+    ],
+    "helpUrl": "https://www.minecraft.net/en-us/download/server/bedrock",
+    "helpLabel": "Скачать Bedrock Dedicated Server"
+  }
+}
