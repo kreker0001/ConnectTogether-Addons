@@ -1,0 +1,48 @@
+{
+  "$schema": "https://raw.githubusercontent.com/kreker0001/ConnectTogether-Addons/main/schema/addon.schema.json",
+  "format": 1,
+  "id": "rust",
+  "name": "Rust",
+  "subtitle": "Rust Dedicated Server",
+  "icon": "axe",
+  "version": "1.0.0",
+  "author": "Команда ConnectTogether",
+  "requirements": { "ramGb": 8, "diskGb": 15 },
+  "install": [
+    { "id": "server", "type": "steamcmd", "appId": 258550 }
+  ],
+  "files": [ "RustDedicated.exe" ],
+  "settings": [
+    { "id": "name", "label": "Название сервера", "type": "text", "default": "Сервер ConnectTogether" },
+    { "id": "slots", "label": "Игроков", "type": "number", "default": "10", "min": 1, "max": 200 },
+    { "id": "world-size", "label": "Размер карты", "type": "number", "default": "3000", "min": 1000, "max": 6000 },
+    { "id": "seed", "label": "Сид карты", "type": "number", "default": "12345", "min": 0, "max": 2147483647 }
+  ],
+  "ports": [
+    { "id": "game", "protocol": "udp", "default": 28015, "expose": true },
+    { "id": "query", "protocol": "udp", "default": 28017, "expose": false },
+    { "id": "rcon", "protocol": "tcp", "default": 28016, "expose": false }
+  ],
+  "launch": {
+    "exe": "RustDedicated.exe",
+    "args": [
+      "-batchmode", "-nographics", "-logfile", "{dir}/server.log",
+      "+server.port", "{port:game}",
+      "+server.queryport", "{port:query}",
+      "+server.hostname", "{setting:name}",
+      "+server.maxplayers", "{setting:slots}",
+      "+server.worldsize", "{setting:world-size}",
+      "+server.seed", "{setting:seed}",
+      "+server.identity", "connecttogether",
+      "+rcon.web", "1",
+      "+rcon.ip", "127.0.0.1",
+      "+rcon.port", "{port:rcon}",
+      "+rcon.password", "{secret:rcon}"
+    ]
+  },
+  "log": { "file": "server.log" },
+  "ready": { "log": "Server startup complete", "timeoutSeconds": 1200 },
+  "console": { "type": "webrcon", "port": "rcon", "password": "{secret:rcon}" },
+  "stop": { "command": "quit", "timeoutSeconds": 120 },
+  "join": { "consoleKey": "F1", "template": "client.connect {address}" }
+}

@@ -1,0 +1,238 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/kreker0001/ConnectTogether-Addons/main/schema/addon.schema.json",
+  "title": "Дополнение ConnectTogether (addon.json)",
+  "description": "Как ConnectTogether ставит и запускает выделенный сервер игры или как хосту запустить его самому. Формат: docs/format.md в репозитории дополнений.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [ "format", "id", "name", "version", "author", "ports" ],
+  "properties": {
+    "$schema": { "type": "string", "description": "Ссылка на эту схему: по ней редактор подсказывает поля. Приложение её не читает." },
+    "format": { "const": 1, "description": "Версия формата, сейчас 1. Другую приложение не откроет." },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,39}$",
+      "description": "Имя папки дополнения: латиница в нижнем регистре, цифры, дефис, до 40 символов. Совпадает с именем папки."
+    },
+    "name": { "type": "string", "minLength": 1, "description": "Название игры в приложении." },
+    "subtitle": { "type": "string", "description": "Строка под названием: редакция или вид сервера." },
+    "icon": {
+      "type": "string",
+      "description": "Иконка из набора приложения, например cube, axe, gamepad, server, puzzle. Неизвестная — puzzle."
+    },
+    "version": { "type": "string", "minLength": 1, "description": "Версия дополнения. Новая версия того же id заменяет прежнюю." },
+    "author": { "type": "string", "minLength": 1, "description": "Кто сделал и поддерживает дополнение." },
+    "requirements": { "$ref": "#/$defs/requirements" },
+    "install": {
+      "type": "array",
+      "description": "Что скачать, по порядку. Только https с хэшем или SteamCMD. Только у дополнения с launch.",
+      "items": { "$ref": "#/$defs/installStep" }
+    },
+    "eula": { "$ref": "#/$defs/eula" },
+    "files": {
+      "type": "array",
+      "description": "Файлы в папке сервера, без которых его не запустить: перед стартом проверяется, что они на месте.",
+      "items": { "$ref": "#/$defs/relativePath" }
+    },
+    "settings": {
+      "type": "array",
+      "description": "Настройки сервера для пользователя; в запуск и конфиги их ставит {setting:id}.",
+      "items": { "$ref": "#/$defs/setting" }
+    },
+    "ports": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Порты сервера. С expose: true порт уходит в комнату и виден друзьям; хотя бы один такой нужен.",
+      "items": { "$ref": "#/$defs/port" }
+    },
+    "config": {
+      "type": "array",
+      "description": "Конфиги сервера, где перед каждым запуском выставляются значения.",
+      "items": { "$ref": "#/$defs/config" }
+    },
+    "launch": { "$ref": "#/$defs/launch" },
+    "log": { "$ref": "#/$defs/log" },
+    "ready": { "$ref": "#/$defs/ready" },
+    "console": { "$ref": "#/$defs/console" },
+    "stop": { "$ref": "#/$defs/stop" },
+    "join": { "$ref": "#/$defs/join" },
+    "guide": { "$ref": "#/$defs/guide" }
+  },
+  "dependentRequired": { "launch": [ "ready" ] },
+  "if": { "not": { "required": [ "launch" ] } },
+  "then": {
+    "description": "Сервер с инструкцией: без launch приложение сервер не ставит и не запускает — полям установки и запуска здесь не место.",
+    "properties": {
+      "install": false, "requirements": false, "eula": false, "files": false, "settings": false,
+      "config": false, "log": false, "stop": false
+    }
+  },
+  "$defs": {
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "not": { "pattern": "(^[/\\\\])|:|(^|[/\\\\])\\.\\.([/\\\\]|$)" },
+      "description": "Путь внутри папки сервера: без диска, без «..» и не от корня."
+    },
+    "guideText": { "type": "string", "minLength": 1, "maxLength": 300, "pattern": "\\S" },
+    "requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Сколько нужно серверу: по этим числам экран дополнения предупреждает, если не хватает.",
+      "properties": {
+        "ramGb": { "type": "number", "exclusiveMinimum": 0, "description": "Память, ГБ." },
+        "diskGb": { "type": "number", "exclusiveMinimum": 0, "description": "Место на диске для установки, ГБ." }
+      }
+    },
+    "installStep": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "id", "type" ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,39}$", "description": "Имя шага; на его папку ссылается {install:id}." },
+        "type": { "enum": [ "http", "steamcmd", "steamCmd" ], "description": "http — файл по https с хэшем; steamcmd — выделенный сервер из Steam." },
+        "url": { "type": "string", "pattern": "^https://", "description": "http: адрес файла, только https." },
+        "sha256": { "type": "string", "pattern": "^[0-9a-fA-F]{64}$", "description": "http: SHA-256 файла. Нужен он или sha1." },
+        "sha1": { "type": "string", "pattern": "^[0-9a-fA-F]{40}$", "description": "http: SHA-1, если источник публикует только его (Mojang)." },
+        "extract": { "type": "boolean", "description": "http: распаковать zip, а не сохранить файлом." },
+        "stripRoot": { "type": "boolean", "description": "http: в архиве одна папка верхнего уровня — распаковать её содержимое без неё." },
+        "shared": { "type": "boolean", "description": "http: в общую папку — одинаковый архив ставится один раз на все дополнения (так ставится Java)." },
+        "file": { "$ref": "#/$defs/relativePath", "description": "http без распаковки: имя файла; по умолчанию — из адреса." },
+        "appId": { "type": "integer", "minimum": 1, "description": "steamcmd: номер приложения выделенного сервера в Steam (Rust Dedicated — 258550)." }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "http" } } },
+          "then": { "required": [ "url" ], "anyOf": [ { "required": [ "sha256" ] }, { "required": [ "sha1" ] } ], "not": { "required": [ "appId" ] } }
+        },
+        {
+          "if": { "properties": { "type": { "enum": [ "steamcmd", "steamCmd" ] } } },
+          "then": { "required": [ "appId" ] }
+        }
+      ]
+    },
+    "eula": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "url", "file", "line" ],
+      "description": "Лицензия сервера: пользователь принимает её сам кнопкой «Принимаю».",
+      "properties": {
+        "url": { "type": "string", "pattern": "^https://", "description": "Текст лицензии." },
+        "file": { "$ref": "#/$defs/relativePath", "description": "Файл согласия в папке сервера (Minecraft: eula.txt)." },
+        "line": { "type": "string", "minLength": 1, "description": "Строка, которая означает согласие (Minecraft: eula=true)." }
+      }
+    },
+    "setting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "id", "label", "type", "default" ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,39}$" },
+        "label": { "type": "string", "minLength": 1, "description": "Подпись поля на экране дополнения." },
+        "type": { "enum": [ "text", "number", "bool" ], "description": "number — целое число; bool — \"true\" или \"false\"." },
+        "default": { "type": "string", "description": "Значение по умолчанию — строкой, и для чисел тоже: \"10\"." },
+        "min": { "type": "number", "description": "Для чисел: не меньше." },
+        "max": { "type": "number", "description": "Для чисел: не больше." }
+      }
+    },
+    "port": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "id", "protocol", "default" ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "description": "Имя порта; на него ссылается {port:id}." },
+        "protocol": { "enum": [ "tcp", "udp" ] },
+        "default": { "type": "integer", "minimum": 1, "maximum": 65535, "description": "Номер по умолчанию; пользователь может поменять его на экране дополнения." },
+        "expose": { "type": "boolean", "description": "Порт уходит в комнату и виден друзьям. Порт консоли (RCON) — false." }
+      }
+    },
+    "config": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "file", "format", "set" ],
+      "properties": {
+        "file": { "$ref": "#/$defs/relativePath" },
+        "format": { "enum": [ "properties" ] },
+        "set": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "type": "string" },
+          "description": "Ключ → значение; в значениях работают подстановки."
+        }
+      }
+    },
+    "launch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "exe" ],
+      "description": "Как запустить сервер. Нет — «сервер с инструкцией»: его запускает хост сам.",
+      "properties": {
+        "exe": { "type": "string", "minLength": 1, "description": "Что запустить: только из папки сервера или папки шага установки ({install:id})." },
+        "args": { "type": "array", "items": { "type": "string" }, "description": "Аргументы по одному: значение с пробелами остаётся одним аргументом." },
+        "workDir": { "type": "string", "description": "Рабочая папка внутри папки сервера; по умолчанию — она сама." }
+      }
+    },
+    "log": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "file" ],
+      "description": "Если сервер пишет лог в файл, а не в вывод (Unity-серверы, Rust).",
+      "properties": {
+        "file": { "$ref": "#/$defs/relativePath" }
+      }
+    },
+    "ready": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Как понять, что сервер готов: по строке лога или по открывшемуся порту — одно из двух.",
+      "properties": {
+        "log": { "type": "string", "description": "Регулярное выражение для строки лога." },
+        "port": { "type": "string", "description": "id порта из ports, который начинает слушать готовый сервер." },
+        "timeoutSeconds": { "type": "integer", "minimum": 1, "maximum": 3600, "description": "Сколько ждать готовности; по умолчанию 600." }
+      },
+      "oneOf": [ { "required": [ "log" ] }, { "required": [ "port" ] } ]
+    },
+    "console": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "type" ],
+      "properties": {
+        "type": { "enum": [ "stdio", "rcon", "webrcon", "webRcon" ], "description": "stdio — команды в стандартный ввод; rcon — Source RCON; webrcon — WebRCON (Rust)." },
+        "port": { "type": "string", "description": "rcon, webrcon: id TCP-порта из ports, без expose." },
+        "password": { "type": "string", "description": "rcon, webrcon: пароль, обычно {secret:rcon} — приложение придумает его само." }
+      }
+    },
+    "stop": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "command" ],
+      "properties": {
+        "command": { "type": "string", "minLength": 1, "description": "Команда консоли, после которой сервер сохраняет мир и закрывается." },
+        "timeoutSeconds": { "type": "integer", "minimum": 1, "maximum": 600, "description": "Сколько ждать закрытия, потом процесс завершается принудительно." }
+      }
+    },
+    "join": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Как друзьям зайти в игру по адресу из комнаты.",
+      "properties": {
+        "consoleKey": { "type": "string", "description": "Клавиша консоли игры, например F1." },
+        "menuPath": { "type": "array", "items": { "type": "string" }, "description": "Пункты меню игры по порядку." },
+        "template": { "type": "string", "description": "Что ввести в игре; {address} заменяется на адрес. По умолчанию — сам адрес." }
+      }
+    },
+    "guide": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Тексты для людей. Нет — приложение пишет общие.",
+      "properties": {
+        "hint": { "$ref": "#/$defs/guideText", "description": "Строка под названием на карточке выбора игры." },
+        "startSteps": { "type": "array", "maxItems": 8, "items": { "$ref": "#/$defs/guideText" }, "description": "Как хосту запустить сервер, если приложение его не нашло." },
+        "stoppedTips": { "type": "array", "maxItems": 8, "items": { "$ref": "#/$defs/guideText" }, "description": "Что делать, если сервер перестал отвечать при открытой комнате." },
+        "helpUrl": { "type": "string", "pattern": "^https://", "description": "Ссылка на помощь по серверу игры." },
+        "helpLabel": { "$ref": "#/$defs/guideText", "description": "Подпись к ссылке; только вместе с helpUrl." }
+      },
+      "dependentRequired": { "helpLabel": [ "helpUrl" ] }
+    }
+  }
+}

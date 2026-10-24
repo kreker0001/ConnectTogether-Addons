@@ -1,0 +1,60 @@
+{
+  "$schema": "https://raw.githubusercontent.com/kreker0001/ConnectTogether-Addons/main/schema/addon.schema.json",
+  "format": 1,
+  "id": "minecraft",
+  "name": "Minecraft",
+  "subtitle": "Java Edition — сервер 26.3",
+  "icon": "cube",
+  "version": "1.0.0",
+  "author": "Команда ConnectTogether",
+  "requirements": { "ramGb": 3, "diskGb": 1 },
+  "install": [
+    {
+      "id": "java",
+      "type": "http",
+      "url": "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.4.1%2B1/OpenJDK25U-jre_x64_windows_hotspot_25.0.4.1_1.zip",
+      "sha256": "4c95451cea98556def2c54f7782933f52a26d4a36bd85e1d59f0364464828b07",
+      "extract": true,
+      "stripRoot": true,
+      "shared": true
+    },
+    {
+      "id": "server",
+      "type": "http",
+      "url": "https://piston-data.mojang.com/v1/objects/33680f5f2ac32864d6d7cf5e56a705fdb3e05f4c/server.jar",
+      "sha1": "33680f5f2ac32864d6d7cf5e56a705fdb3e05f4c",
+      "file": "server.jar"
+    }
+  ],
+  "eula": { "url": "https://aka.ms/MinecraftEULA", "file": "eula.txt", "line": "eula=true" },
+  "files": [ "server.jar" ],
+  "settings": [
+    { "id": "name", "label": "Название сервера", "type": "text", "default": "Сервер ConnectTogether" },
+    { "id": "slots", "label": "Игроков", "type": "number", "default": "10", "min": 1, "max": 100 },
+    { "id": "online-mode", "label": "Только лицензионные аккаунты", "type": "bool", "default": "true" },
+    { "id": "memory", "label": "Память сервера, ГБ", "type": "number", "default": "2", "min": 1, "max": 32 }
+  ],
+  "ports": [
+    { "id": "game", "protocol": "tcp", "default": 25565, "expose": true }
+  ],
+  "config": [
+    {
+      "file": "server.properties",
+      "format": "properties",
+      "set": {
+        "server-port": "{port:game}",
+        "motd": "{setting:name}",
+        "max-players": "{setting:slots}",
+        "online-mode": "{setting:online-mode}"
+      }
+    }
+  ],
+  "launch": {
+    "exe": "{install:java}/bin/java.exe",
+    "args": [ "-Xms1G", "-Xmx{setting:memory}G", "-Dstdout.encoding=UTF-8", "-Dstderr.encoding=UTF-8", "-jar", "server.jar", "nogui" ]
+  },
+  "ready": { "log": "Done \\([0-9.,]+s\\)!", "timeoutSeconds": 600 },
+  "console": { "type": "stdio" },
+  "stop": { "command": "stop", "timeoutSeconds": 60 },
+  "join": { "menuPath": [ "Сетевая игра", "Прямое подключение" ], "template": "{address}" }
+}

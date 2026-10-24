@@ -1,0 +1,38 @@
+# Проверка дополнений: на каждый pull request и после слияния в main.
+# addon-check проверяет теми же правилами, что приложение ConnectTogether, и правилами репозитория
+# (папка совпадает с id, id не повторяется и не занят встроенной игрой). Берётся из релиза этого репозитория.
+name: Проверка дополнений
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  # Релиз с addon-check-linux-x64; новая версия проверки — новый релиз и новое имя здесь
+  ADDON_CHECK: addon-check-1.0
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Скачать addon-check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download "$ADDON_CHECK" --repo "$GITHUB_REPOSITORY" --pattern addon-check-linux-x64 --dir "$RUNNER_TEMP"
+          chmod +x "$RUNNER_TEMP/addon-check-linux-x64"
+
+      - name: Дополнения сообщества
+        run: |
+          "$RUNNER_TEMP/addon-check-linux-x64" --reserved minecraft,rust,custom addons
+
+      - name: Примеры
+        run: |
+          "$RUNNER_TEMP/addon-check-linux-x64" examples
