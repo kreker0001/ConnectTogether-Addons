@@ -1,0 +1,66 @@
+{
+  "$schema": "https://raw.githubusercontent.com/kreker0001/ConnectTogether-Addons/main/schema/addon.schema.json",
+  "format": 1,
+  "id": "terraria",
+  "name": "Terraria",
+  "subtitle": "Сервер 1.4.5.8 · нужна Terraria из Steam",
+  "icon": "sword",
+  "version": "1.0.0",
+  "author": "Команда ConnectTogether",
+  "requirements": { "ramGb": 2, "diskGb": 0.3 },
+  "install": [
+    {
+      "id": "server",
+      "type": "http",
+      "url": "https://terraria.org/api/download/pc-dedicated-server/terraria-server-1458.zip",
+      "sha256": "f513a4ac9789d34af766291ae217c9cd7d9472e13782a0e2b17512f70d7a8334",
+      "extract": true,
+      "stripRoot": true
+    }
+  ],
+  "files": [ "Windows/TerrariaServer.exe" ],
+  "settings": [
+    { "id": "world", "label": "Название мира", "type": "text", "default": "Мир ConnectTogether" },
+    { "id": "players", "label": "Игроков", "type": "number", "default": "8", "min": 1, "max": 255 },
+    { "id": "size", "label": "Размер нового мира: 1 — маленький, 2 — средний, 3 — большой", "type": "number", "default": "2", "min": 1, "max": 3 },
+    { "id": "difficulty", "label": "Сложность нового мира: 0 — классика, 1 — эксперт, 2 — мастер, 3 — путешествие", "type": "number", "default": "0", "min": 0, "max": 3 }
+  ],
+  "ports": [
+    { "id": "game", "protocol": "tcp", "default": 7777, "expose": true }
+  ],
+  "config": [
+    { "file": "Windows/serverconfig.txt", "format": "properties", "set": { "difficulty": "{setting:difficulty}" } }
+  ],
+  "launch": {
+    "exe": "Windows/TerrariaServer.exe",
+    "workDir": "Windows",
+    "args": [
+      "-config", "serverconfig.txt",
+      "-port", "{port:game}",
+      "-players", "{setting:players}",
+      "-world", "{dir}/worlds/connecttogether.wld",
+      "-autocreate", "{setting:size}",
+      "-worldname", "{setting:world}",
+      "-noupnp"
+    ]
+  },
+  "ready": { "port": "game", "timeoutSeconds": 600 },
+  "console": { "type": "terminal" },
+  "stop": { "command": "exit", "timeoutSeconds": 60 },
+  "join": { "menuPath": [ "Мультиплеер", "Присоединиться по IP", "IP, затем порт из адреса" ], "template": "{address}" },
+  "guide": {
+    "hint": "Сервер ставит ConnectTogether, нужна Terraria из Steam",
+    "startSteps": [
+      "Запустите Terraria: «Мультиплеер» → «Создать и играть», выберите мир; порт оставьте 7777.",
+      "Дождитесь, пока мир загрузится.",
+      "Вернитесь сюда и нажмите «Проверить снова»."
+    ],
+    "stoppedTips": [
+      "Проверьте, не закрылся ли сервер или мир Terraria.",
+      "Запустите его снова — мир сохранится, комната и код останутся прежними.",
+      "Нажмите «Проверить снова»."
+    ],
+    "helpUrl": "https://terraria.wiki.gg/wiki/Server",
+    "helpLabel": "Как устроен сервер Terraria"
+  }
+}

@@ -56,7 +56,7 @@ ConnectTogether. Сеть остаётся за ConnectTogether: порты се
 | `launch` | `exe`, `args[]` (каждый элемент — один аргумент, пробелы внутри не делят его), `workDir`. Нет — сервер с инструкцией. |
 | `log` | `file` — если сервер пишет лог в файл, а не в вывод (Unity-серверы, Rust). |
 | `ready` | Когда сервер готов: `log` (регулярное выражение для строки лога) или `port` (id порта, который начинает слушать). `timeoutSeconds` — сколько ждать, по умолчанию 600. |
-| `console` | `type`: `stdio` (команды в стандартный ввод), `rcon` (Source RCON по TCP), `webrcon` (WebRCON, Rust). Для RCON — `port` и `password`. |
+| `console` | `type`: `stdio` (команды в стандартный ввод), `rcon` (Source RCON по TCP), `webrcon` (WebRCON, Rust), `terminal` (у сервера своя скрытая консоль: команды — нажатиями клавиш, лог — с её экрана; для серверов, которые не читают перенаправленный ввод, как Terraria; только Windows). Для RCON — `port` и `password`. |
 | `stop` | `command` — команда, после которой сервер сохраняет мир и закрывается; `timeoutSeconds` — сколько ждать, потом процесс завершается принудительно. |
 | `join` | Как друзьям зайти: `consoleKey` или `menuPath[]`, `template` с `{address}`. |
 | `guide` | Тексты для людей: `hint` — строка на карточке игры; `startSteps[]` — как хосту запустить сервер, если приложение его не нашло; `stoppedTips[]` — что делать, если сервер перестал отвечать; `helpUrl` (https) и `helpLabel` — ссылка на помощь. До 8 пунктов в списке, до 300 символов в тексте. |
@@ -149,7 +149,7 @@ ConnectTogether не раздаёт файлы серверов: только о
 
    ```
    addon-check-win-x64.exe addons\my-game\addon.json
-   addon-check-win-x64.exe --reserved minecraft,rust,minecraft-bedrock,valheim,7-days-to-die,project-zomboid,palworld,custom addons
+   addon-check-win-x64.exe --reserved minecraft,rust,minecraft-bedrock,valheim,7-days-to-die,project-zomboid,palworld,terraria,custom addons
    ```
 
    Все ошибки выводятся сразу, с полем и причиной.

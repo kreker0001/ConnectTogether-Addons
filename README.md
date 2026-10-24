@@ -26,6 +26,8 @@
 1. Скопируйте пример, который ближе к вашей игре:
    - [`examples/minecraft`](examples/minecraft/addon.json) — сервер скачивается по https с проверкой хэша, лицензия, настройки;
    - [`examples/rust`](examples/rust/addon.json) — выделенный сервер из Steam через SteamCMD, консоль по RCON;
+   - [`examples/terraria`](examples/terraria/addon.json) — сервер по https с хэшем, настройки мира, консоль `terminal`
+     для сервера, который читает команды по клавишам;
    - [`examples/factorio`](examples/factorio/addon.json) — сервер с инструкцией: хост запускает игру сам, приложение
      подсказывает шаги и открывает порты друзьям; так же устроены [Valheim](examples/valheim/addon.json),
      [Palworld](examples/palworld/addon.json) и другие встроенные игры.
@@ -50,5 +52,5 @@
 
 Пока пусто — пришлите первое.
 
-Эти игры уже встроены в приложение, ставить их отсюда не нужно: Minecraft (Java и Bedrock), Rust, Valheim,
+Эти игры уже встроены в приложение, ставить их отсюда не нужно: Minecraft (Java и Bedrock), Rust, Terraria, Valheim,
 7 Days to Die, Project Zomboid и Palworld. Их манифесты лежат в [`examples/`](examples) — с них удобно начинать своё.

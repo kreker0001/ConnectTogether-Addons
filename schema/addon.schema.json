@@ -197,7 +197,7 @@
       "additionalProperties": false,
       "required": [ "type" ],
       "properties": {
-        "type": { "enum": [ "stdio", "rcon", "webrcon", "webRcon" ], "description": "stdio — команды в стандартный ввод; rcon — Source RCON; webrcon — WebRCON (Rust)." },
+        "type": { "enum": [ "stdio", "rcon", "webrcon", "webRcon", "terminal" ], "description": "stdio — команды в стандартный ввод; rcon — Source RCON; webrcon — WebRCON (Rust); terminal — нажатиями клавиш в скрытую консоль сервера, лог с её экрана (Terraria; только Windows)." },
         "port": { "type": "string", "description": "rcon, webrcon: id TCP-порта из ports, без expose." },
         "password": { "type": "string", "description": "rcon, webrcon: пароль, обычно {secret:rcon} — приложение придумает его само." }
       }
