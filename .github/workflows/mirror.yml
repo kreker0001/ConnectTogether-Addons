@@ -22,7 +22,25 @@ env:
   CT_SERVER: https://connecttogether.ru
 
 jobs:
+  # Пока секрета нет, зеркало молча ждёт его, а не падает каждые 30 минут
+  token:
+    runs-on: ubuntu-latest
+    outputs:
+      ok: ${{ steps.check.outputs.ok }}
+    steps:
+      - id: check
+        env:
+          TOKEN: ${{ secrets.ADDONS_MIRROR_TOKEN }}
+        run: |
+          if [ -n "$TOKEN" ]; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::Секрета ADDONS_MIRROR_TOKEN нет — зеркало каталога ждёт его"
+          fi
+
   mirror:
+    needs: token
+    if: needs.token.outputs.ok == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
