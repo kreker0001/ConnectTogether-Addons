@@ -1,0 +1,58 @@
+{
+  "$schema": "https://raw.githubusercontent.com/kreker0001/ConnectTogether-Addons/main/schema/addon.schema.json",
+  "format": 1,
+  "id": "core-keeper",
+  "name": "Core Keeper",
+  "subtitle": "Core Keeper Dedicated Server из Steam",
+  "icon": "pickaxe",
+  "version": "1.0.0",
+  "author": "Команда ConnectTogether",
+  "requirements": { "ramGb": 4, "diskGb": 1 },
+  "install": [
+    { "id": "server", "type": "steamcmd", "appId": 1963720 }
+  ],
+  "files": [ "CoreKeeperServer.exe" ],
+  "settings": [
+    { "id": "world", "label": "Название мира", "type": "text", "default": "ConnectTogether" },
+    { "id": "players", "label": "Игроков", "type": "number", "default": "8", "min": 1, "max": 100 }
+  ],
+  "ports": [
+    { "id": "game", "protocol": "udp", "default": 27015, "expose": true }
+  ],
+  "launch": {
+    "exe": "CoreKeeperServer.exe",
+    "args": [
+      "-batchmode",
+      "-logfile", "CoreKeeperServerLog.txt",
+      "-port", "{port:game}",
+      "-password", "connecttogether",
+      "-worldname", "{setting:world}",
+      "-world", "0",
+      "-maxplayers", "{setting:players}",
+      "-datapath", "{dir}/data"
+    ]
+  },
+  "log": { "file": "CoreKeeperServerLog.txt" },
+  "ready": { "port": "game", "timeoutSeconds": 600 },
+  "console": { "type": "stdio" },
+  "stop": { "signal": "close", "timeoutSeconds": 60 },
+  "join": {
+    "menuPath": [ "Присоединиться к игре", "Подключиться по IP", "Вставьте строку в поле IP — порт и пароль заполнятся сами" ],
+    "template": "{ip};{port};;connecttogether"
+  },
+  "guide": {
+    "hint": "Сервер ставит ConnectTogether, нужна Core Keeper из Steam",
+    "startSteps": [
+      "Нажмите «Запустить мой сервер» — ConnectTogether скачает Core Keeper Dedicated Server из Steam и запустит его.",
+      "Или запустите его сами с параметрами -port 27015 -password connecttogether.",
+      "Дождитесь, пока сервер создаст мир, и нажмите «Проверить снова»."
+    ],
+    "stoppedTips": [
+      "Проверьте, не закрылся ли сервер Core Keeper.",
+      "Запустите его снова — мир сохранится, комната и код останутся прежними.",
+      "Нажмите «Проверить снова»."
+    ],
+    "helpUrl": "https://store.steampowered.com/app/1621690/Core_Keeper/",
+    "helpLabel": "Core Keeper в Steam"
+  }
+}

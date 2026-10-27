@@ -15,7 +15,7 @@ permissions:
 
 env:
   # Релиз с addon-check-linux-x64; новая версия проверки — новый релиз и новое имя здесь
-  ADDON_CHECK: addon-check-1.2
+  ADDON_CHECK: addon-check-1.3
 
 jobs:
   check:
@@ -32,7 +32,7 @@ jobs:
 
       - name: Дополнения сообщества
         run: |
-          "$RUNNER_TEMP/addon-check-linux-x64" --reserved minecraft,rust,minecraft-bedrock,valheim,7-days-to-die,project-zomboid,palworld,terraria,custom addons
+          "$RUNNER_TEMP/addon-check-linux-x64" --reserved minecraft,rust,minecraft-bedrock,valheim,7-days-to-die,project-zomboid,palworld,terraria,v-rising,enshrouded,satisfactory,core-keeper,custom addons
 
       - name: Примеры
         run: |

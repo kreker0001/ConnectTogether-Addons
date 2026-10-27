@@ -14,7 +14,8 @@
 ## Как установить дополнение
 
 1. Откройте папку игры в [`addons/`](addons) и скачайте её `addon.json` (кнопка «Download raw file»).
-2. В ConnectTogether откройте **Настройки → Игры → «Добавить из файла»** и выберите скачанный файл.
+2. В ConnectTogether откройте **Настройки → Игры → «Добавить из файла»** и выберите скачанный файл. Можно и проще:
+   переименуйте его в `<id>.ctaddon` и откройте двойным щелчком — приложение покажет то же окно.
 3. Приложение покажет, что дополнение будет делать: что скачает и откуда, что запустит, какие порты откроет друзьям.
    Если всё так, нажмите «Добавить» — игра сразу появится в «Создать комнату».
 
@@ -33,11 +34,16 @@
      порты и слоты в его ini, команды в стандартный ввод;
    - [`examples/palworld`](examples/palworld/addon.json) — SteamCMD, настройки в INI Unreal Engine (`OptionSettings`),
      консоль по RCON, перед остановкой — сохранение;
+   - [`examples/enshrouded`](examples/enshrouded/addon.json) — SteamCMD, настройки в JSON, группа игроков задаётся из
+     манифеста;
+   - [`examples/core-keeper`](examples/core-keeper/addon.json) — SteamCMD, остановка «закрыть окно», строка для входа
+     `{ip};{port};;пароль`;
+   - [`examples/7-days-to-die`](examples/7-days-to-die/addon.json) — SteamCMD, настройки аргументами, консоль по telnet;
    - [`examples/factorio`](examples/factorio/addon.json) — сервер с инструкцией: хост запускает игру сам, приложение
-     подсказывает шаги и открывает порты друзьям; так же устроены
-     [Minecraft Bedrock](examples/minecraft-bedrock/addon.json) и [7 Days to Die](examples/7-days-to-die/addon.json).
+     подсказывает шаги и открывает порты друзьям; так же устроен [Minecraft Bedrock](examples/minecraft-bedrock/addon.json).
 2. Откройте `addon.json` в VS Code: строка `"$schema"` включает подсказки по полям. Все поля описаны в
-   [`docs/format.md`](docs/format.md).
+   [`docs/format.md`](docs/format.md). Или откройте в ConnectTogether **Настройки → Игры → «Сделать дополнение»**:
+   там шаблоны встроенных игр, проверка на лету и сохранение в `.ctaddon`.
 3. Проверьте файл программой `addon-check` — её можно скачать из
    [релизов](https://github.com/kreker0001/ConnectTogether-Addons/releases):
 
@@ -58,7 +64,7 @@
 Пока пусто — пришлите первое.
 
 Эти игры уже встроены в приложение, ставить их отсюда не нужно: Minecraft (Java и Bedrock), Rust, Terraria, Valheim,
-7 Days to Die, Project Zomboid и Palworld. Их манифесты лежат в [`examples/`](examples) — с них удобно начинать своё.
+7 Days to Die, Project Zomboid, Palworld, V Rising, Enshrouded, Satisfactory и Core Keeper. Их манифесты лежат в [`examples/`](examples) — с них удобно начинать своё.
 
 ## Лицензия
 

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://raw.githubusercontent.com/kreker0001/ConnectTogether-Addons/main/schema/addon.schema.json",
+  "format": 1,
+  "id": "satisfactory",
+  "name": "Satisfactory",
+  "subtitle": "Satisfactory Dedicated Server из Steam",
+  "icon": "zap",
+  "version": "1.0.0",
+  "author": "Команда ConnectTogether",
+  "requirements": { "ramGb": 12, "diskGb": 16 },
+  "install": [
+    { "id": "server", "type": "steamcmd", "appId": 1690800 }
+  ],
+  "files": [ "Engine/Binaries/Win64/FactoryServer-Win64-Shipping-Cmd.exe" ],
+  "settings": [
+    { "id": "admin", "label": "Пароль администратора: с ним сервер можно настраивать в «Менеджере серверов» игры", "type": "text", "default": "connecttogether" }
+  ],
+  "ports": [
+    { "id": "game", "protocol": "tcp", "default": 7777, "expose": true },
+    { "id": "game-udp", "protocol": "udp", "default": 7777, "expose": true },
+    { "id": "reliable", "protocol": "tcp", "default": 8888, "expose": true }
+  ],
+  "launch": {
+    "exe": "Engine/Binaries/Win64/FactoryServer-Win64-Shipping-Cmd.exe",
+    "args": [ "FactoryGame", "-Port={port:game}", "-ReliablePort={port:reliable}", "-log", "-unattended" ]
+  },
+  "ready": { "port": "game", "timeoutSeconds": 900 },
+  "console": { "type": "satisfactory", "port": "game", "password": "{setting:admin}" },
+  "stop": { "save": "server.SaveGame ConnectTogether", "command": "quit", "timeoutSeconds": 120 },
+  "join": { "menuPath": [ "Менеджер серверов", "Добавить сервер", "Адрес и порт — из адреса" ], "template": "{address}" },
+  "guide": {
+    "hint": "Сервер ставит ConnectTogether, нужна Satisfactory из Steam",
+    "startSteps": [
+      "Нажмите «Запустить мой сервер» — ConnectTogether скачает Satisfactory Dedicated Server из Steam и запустит его.",
+      "Новый сервер ConnectTogether присвоит себе и создаст на нём игру — пароль администратора задан в настройках сервера.",
+      "Дождитесь, пока сервер загрузится, и нажмите «Проверить снова»."
+    ],
+    "stoppedTips": [
+      "Проверьте, не закрылся ли сервер Satisfactory.",
+      "Запустите его снова — фабрика сохранится, комната и код останутся прежними.",
+      "Нажмите «Проверить снова»."
+    ],
+    "helpUrl": "https://satisfactory.wiki.gg/wiki/Dedicated_servers",
+    "helpLabel": "Как устроен сервер Satisfactory"
+  }
+}

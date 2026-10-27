@@ -1,0 +1,58 @@
+{
+  "$schema": "https://raw.githubusercontent.com/kreker0001/ConnectTogether-Addons/main/schema/addon.schema.json",
+  "format": 1,
+  "id": "v-rising",
+  "name": "V Rising",
+  "subtitle": "V Rising Dedicated Server из Steam",
+  "icon": "moon",
+  "version": "1.0.0",
+  "author": "Команда ConnectTogether",
+  "requirements": { "ramGb": 6, "diskGb": 2.5 },
+  "install": [
+    { "id": "server", "type": "steamcmd", "appId": 1829350 }
+  ],
+  "files": [ "VRisingServer.exe" ],
+  "settings": [
+    { "id": "name", "label": "Название сервера", "type": "text", "default": "ConnectTogether" },
+    { "id": "world", "label": "Мир (имя сохранения)", "type": "text", "default": "world1" },
+    { "id": "players", "label": "Игроков", "type": "number", "default": "10", "min": 1, "max": 60 }
+  ],
+  "ports": [
+    { "id": "game", "protocol": "udp", "default": 9876, "expose": true },
+    { "id": "query", "protocol": "udp", "default": 9877, "expose": true }
+  ],
+  "launch": {
+    "exe": "VRisingServer.exe",
+    "args": [
+      "-persistentDataPath", "{dir}/save-data",
+      "-serverName", "{setting:name}",
+      "-saveName", "{setting:world}",
+      "-gamePort", "{port:game}",
+      "-queryPort", "{port:query}",
+      "-maxUsers", "{setting:players}",
+      "-listOnSteam", "false",
+      "-listOnEOS", "false",
+      "-logFile", "{dir}/logs/VRisingServer.log"
+    ]
+  },
+  "log": { "file": "logs/VRisingServer.log" },
+  "ready": { "port": "game", "timeoutSeconds": 600 },
+  "console": { "type": "terminal" },
+  "stop": { "signal": "ctrlC", "timeoutSeconds": 60 },
+  "join": { "menuPath": [ "Играть", "Онлайн-игра", "Прямое подключение" ], "template": "{address}" },
+  "guide": {
+    "hint": "Сервер ставит ConnectTogether, нужна V Rising из Steam",
+    "startSteps": [
+      "Нажмите «Запустить мой сервер» — ConnectTogether скачает V Rising Dedicated Server из Steam и запустит его.",
+      "Или запустите сервер сами (start_server_example.bat в папке сервера), порт оставьте 9876.",
+      "Дождитесь, пока сервер загрузит мир, и нажмите «Проверить снова»."
+    ],
+    "stoppedTips": [
+      "Проверьте, не закрылся ли сервер V Rising.",
+      "Запустите его снова — мир сохранится, комната и код останутся прежними.",
+      "Нажмите «Проверить снова»."
+    ],
+    "helpUrl": "https://github.com/StunlockStudios/vrising-dedicated-server-instructions",
+    "helpLabel": "Как устроен сервер V Rising"
+  }
+}

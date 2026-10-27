@@ -1,4 +1,5 @@
 {
+  "$schema": "https://raw.githubusercontent.com/kreker0001/ConnectTogether-Addons/main/schema/addon.schema.json",
   "format": 1,
   "id": "palworld",
   "name": "Palworld",

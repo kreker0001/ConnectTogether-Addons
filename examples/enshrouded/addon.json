@@ -1,0 +1,57 @@
+{
+  "$schema": "https://raw.githubusercontent.com/kreker0001/ConnectTogether-Addons/main/schema/addon.schema.json",
+  "format": 1,
+  "id": "enshrouded",
+  "name": "Enshrouded",
+  "subtitle": "Enshrouded Dedicated Server из Steam",
+  "icon": "sparkle",
+  "version": "1.0.0",
+  "author": "Команда ConnectTogether",
+  "requirements": { "ramGb": 6, "diskGb": 8 },
+  "install": [
+    { "id": "server", "type": "steamcmd", "appId": 2278520 }
+  ],
+  "files": [ "enshrouded_server.exe" ],
+  "settings": [
+    { "id": "name", "label": "Название сервера", "type": "text", "default": "ConnectTogether" },
+    { "id": "password", "label": "Пароль для входа: пусто — без пароля", "type": "text", "default": "" },
+    { "id": "players", "label": "Игроков", "type": "number", "default": "16", "min": 1, "max": 16 }
+  ],
+  "ports": [
+    { "id": "game", "protocol": "udp", "default": 15637, "expose": true }
+  ],
+  "config": [
+    {
+      "file": "enshrouded_server.json",
+      "format": "json",
+      "set": {
+        "name": "{setting:name}",
+        "saveDirectory": "./savegame",
+        "logDirectory": "./logs",
+        "queryPort": "{port:game}",
+        "slotCount": "{setting:players}",
+        "userGroups": "[ { \"name\": \"Friend\", \"password\": \"{setting:password}\", \"canKickBan\": false, \"canAccessInventories\": true, \"canEditWorld\": true, \"canEditBase\": true, \"canExtendBase\": true, \"reservedSlots\": 0 } ]"
+      }
+    }
+  ],
+  "launch": { "exe": "enshrouded_server.exe" },
+  "ready": { "log": "Switching state from LoadEcsScene to Run", "timeoutSeconds": 900 },
+  "console": { "type": "terminal" },
+  "stop": { "signal": "ctrlC", "timeoutSeconds": 90 },
+  "join": { "menuPath": [ "Играть", "Присоединиться", "Поиск по адресу" ], "template": "{address}" },
+  "guide": {
+    "hint": "Сервер ставит ConnectTogether, нужна Enshrouded из Steam",
+    "startSteps": [
+      "Нажмите «Запустить мой сервер» — ConnectTogether скачает Enshrouded Dedicated Server из Steam и запустит его.",
+      "Или запустите enshrouded_server.exe сами, порт оставьте 15637.",
+      "Дождитесь, пока сервер загрузит мир, и нажмите «Проверить снова»."
+    ],
+    "stoppedTips": [
+      "Проверьте, не закрылся ли сервер Enshrouded.",
+      "Запустите его снова — мир сохранится, комната и код останутся прежними.",
+      "Нажмите «Проверить снова»."
+    ],
+    "helpUrl": "https://store.steampowered.com/app/1203620/Enshrouded/",
+    "helpLabel": "Enshrouded в Steam"
+  }
+}

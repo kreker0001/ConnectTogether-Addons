@@ -152,7 +152,7 @@
       "required": [ "file", "format", "set" ],
       "properties": {
         "file": { "$ref": "#/$defs/relativePath" },
-        "format": { "enum": [ "properties", "ini" ], "description": "properties — ключ=значение (server.properties); ini — INI с секциями (Unreal Engine)." },
+        "format": { "enum": [ "properties", "ini", "json" ], "description": "properties — ключ=значение (server.properties); ini — INI с секциями (Unreal Engine); json — JSON, ключ — путь через точку (userGroups.0.password), значение с [ или { — готовый JSON." },
         "section": { "type": "string", "minLength": 1, "pattern": "^[^\\[\\]\\r\\n]+$", "description": "Секция INI без скобок, например /Script/Pal.PalGameWorldSettings. Только для ini." },
         "struct": { "type": "string", "minLength": 1, "pattern": "^[^=\\r\\n]+$", "description": "Ключ INI со структурой Unreal Engine в скобках (OptionSettings): тогда set — её поля, остальные поля остаются. Только для ini." },
         "template": { "$ref": "#/$defs/relativePath", "description": "Файл в папке сервера, с которого начать, если конфига ещё нет (DefaultPalWorldSettings.ini)." },
@@ -160,7 +160,7 @@
           "type": "object",
           "minProperties": 1,
           "additionalProperties": { "type": "string" },
-          "description": "Ключ → значение; в значениях работают подстановки. Строку в структуре пишите в кавычках: \"{setting:name}\"."
+          "description": "Ключ → значение; в значениях работают подстановки. Строку в структуре ini пишите в кавычках: \"{setting:name}\". В json тип — как у поля в файле."
         }
       },
       "if": { "properties": { "format": { "const": "ini" } } },
@@ -203,9 +203,9 @@
       "additionalProperties": false,
       "required": [ "type" ],
       "properties": {
-        "type": { "enum": [ "stdio", "rcon", "webrcon", "webRcon", "terminal" ], "description": "stdio — команды в стандартный ввод; rcon — Source RCON; webrcon — WebRCON (Rust); terminal — нажатиями клавиш в скрытую консоль сервера, лог с её экрана (Terraria; только Windows)." },
-        "port": { "type": "string", "description": "rcon, webrcon: id TCP-порта из ports, без expose." },
-        "password": { "type": "string", "description": "rcon, webrcon: пароль, обычно {secret:rcon} — приложение придумает его само." }
+        "type": { "enum": [ "stdio", "rcon", "webrcon", "webRcon", "terminal", "telnet", "satisfactory" ], "description": "stdio — команды в стандартный ввод; rcon — Source RCON; webrcon — WebRCON (Rust); terminal — нажатиями клавиш в скрытую консоль сервера, лог с её экрана (Terraria; только Windows); telnet — строки по TCP (7 Days to Die); satisfactory — HTTPS API сервера Satisfactory: новый сервер приложение присваивает с паролем администратора и создаёт игру." },
+        "port": { "type": "string", "description": "rcon, webrcon, telnet: id TCP-порта из ports, без expose; satisfactory — игровой TCP-порт." },
+        "password": { "type": "string", "description": "rcon, webrcon: пароль, обычно {secret:rcon} — приложение придумает его само. У telnet — если сервер его спрашивает; у satisfactory — пароль администратора сервера." }
       }
     },
     "stop": {
@@ -215,7 +215,7 @@
       "oneOf": [ { "required": [ "command" ] }, { "required": [ "signal" ] } ],
       "properties": {
         "command": { "type": "string", "minLength": 1, "description": "Команда консоли, после которой сервер сохраняет мир и закрывается." },
-        "signal": { "enum": [ "ctrlC" ], "description": "ctrlC — Ctrl+C в консоль сервера, для серверов, которые команд не принимают (Valheim). Только с console terminal." },
+        "signal": { "enum": [ "ctrlC", "close" ], "description": "ctrlC — Ctrl+C в консоль сервера, для серверов, которые команд не принимают (Valheim); только с console terminal. close — закрыть окно сервера (WM_CLOSE, как taskkill без /f): так сохраняются Unity-серверы вроде Core Keeper." },
         "save": { "type": "string", "minLength": 1, "description": "Команда сохранения перед command — для серверов, которые закрываются без сохранения (Palworld: Save, потом Shutdown). Только вместе с command." },
         "timeoutSeconds": { "type": "integer", "minimum": 1, "maximum": 600, "description": "Сколько ждать закрытия, потом процесс завершается принудительно." }
       }

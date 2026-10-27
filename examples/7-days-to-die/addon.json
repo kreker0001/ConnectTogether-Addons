@@ -3,28 +3,64 @@
   "format": 1,
   "id": "7-days-to-die",
   "name": "7 Days to Die",
-  "subtitle": "Игра по сети из самой игры",
+  "subtitle": "7 Days to Die Dedicated Server из Steam",
   "icon": "flame",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "author": "Команда ConnectTogether",
+  "requirements": { "ramGb": 8, "diskGb": 18 },
+  "install": [
+    { "id": "server", "type": "steamcmd", "appId": 294420 }
+  ],
+  "files": [ "7DaysToDieServer.exe", "serverconfig.xml" ],
+  "settings": [
+    { "id": "name", "label": "Название сервера", "type": "text", "default": "ConnectTogether" },
+    { "id": "world", "label": "Мир (имя сохранения): латиница, цифры, _ - .", "type": "text", "default": "ConnectTogether" },
+    { "id": "players", "label": "Игроков", "type": "number", "default": "8", "min": 1, "max": 32 }
+  ],
   "ports": [
     { "id": "game", "protocol": "tcp", "default": 26900, "expose": true },
     { "id": "game-udp", "protocol": "udp", "default": 26900, "expose": true },
     { "id": "udp-1", "protocol": "udp", "default": 26901, "expose": true },
-    { "id": "udp-2", "protocol": "udp", "default": 26902, "expose": true }
+    { "id": "udp-2", "protocol": "udp", "default": 26902, "expose": true },
+    { "id": "telnet", "protocol": "tcp", "default": 8081 }
   ],
+  "launch": {
+    "exe": "7DaysToDieServer.exe",
+    "args": [
+      "-logfile", "{dir}/output_log.txt",
+      "-quit", "-batchmode", "-nographics",
+      "-configfile=serverconfig.xml",
+      "-UserDataFolder={dir}/UserData",
+      "-ServerName={setting:name}",
+      "-GameName={setting:world}",
+      "-ServerPort={port:game}",
+      "-ServerMaxPlayerCount={setting:players}",
+      "-ServerVisibility=0",
+      "-TelnetEnabled=true",
+      "-TelnetPort={port:telnet}",
+      "-WebDashboardEnabled=false",
+      "-TerminalWindowEnabled=false",
+      "-dedicated"
+    ]
+  },
+  "log": { "file": "output_log.txt" },
+  "ready": { "port": "game", "timeoutSeconds": 1200 },
+  "console": { "type": "telnet", "port": "telnet" },
+  "stop": { "command": "shutdown", "timeoutSeconds": 120 },
   "join": { "menuPath": [ "Присоединиться к игре", "Подключиться по IP", "IP и порт — из адреса" ], "template": "{address}" },
   "guide": {
-    "hint": "Хост запускает мир прямо из игры",
+    "hint": "Сервер ставит ConnectTogether, нужна 7 Days to Die из Steam",
     "startSteps": [
-      "Запустите 7 Days to Die и начните или продолжите игру; в настройках сервера оставьте порт 26900.",
-      "Дождитесь, пока мир загрузится и вы окажетесь в игре.",
-      "Вернитесь сюда и нажмите «Проверить снова»."
+      "Нажмите «Запустить мой сервер» — ConnectTogether скачает 7 Days to Die Dedicated Server из Steam и запустит его.",
+      "Или запустите мир из самой игры; в настройках сервера оставьте порт 26900.",
+      "Дождитесь, пока мир загрузится, и нажмите «Проверить снова»."
     ],
     "stoppedTips": [
-      "Проверьте, не вышли ли вы из мира в главное меню.",
-      "Загрузите тот же мир снова — комната и код останутся прежними.",
+      "Проверьте, не закрылся ли сервер или мир 7 Days to Die.",
+      "Запустите его снова — мир сохранится, комната и код останутся прежними.",
       "Нажмите «Проверить снова»."
-    ]
+    ],
+    "helpUrl": "https://developer.valvesoftware.com/wiki/7_Days_to_Die_Dedicated_Server",
+    "helpLabel": "Как устроен сервер 7 Days to Die"
   }
 }
