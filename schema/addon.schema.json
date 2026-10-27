@@ -152,14 +152,20 @@
       "required": [ "file", "format", "set" ],
       "properties": {
         "file": { "$ref": "#/$defs/relativePath" },
-        "format": { "enum": [ "properties" ] },
+        "format": { "enum": [ "properties", "ini" ], "description": "properties — ключ=значение (server.properties); ini — INI с секциями (Unreal Engine)." },
+        "section": { "type": "string", "minLength": 1, "pattern": "^[^\\[\\]\\r\\n]+$", "description": "Секция INI без скобок, например /Script/Pal.PalGameWorldSettings. Только для ini." },
+        "struct": { "type": "string", "minLength": 1, "pattern": "^[^=\\r\\n]+$", "description": "Ключ INI со структурой Unreal Engine в скобках (OptionSettings): тогда set — её поля, остальные поля остаются. Только для ini." },
+        "template": { "$ref": "#/$defs/relativePath", "description": "Файл в папке сервера, с которого начать, если конфига ещё нет (DefaultPalWorldSettings.ini)." },
         "set": {
           "type": "object",
           "minProperties": 1,
           "additionalProperties": { "type": "string" },
-          "description": "Ключ → значение; в значениях работают подстановки."
+          "description": "Ключ → значение; в значениях работают подстановки. Строку в структуре пишите в кавычках: \"{setting:name}\"."
         }
-      }
+      },
+      "if": { "properties": { "format": { "const": "ini" } } },
+      "then": { "required": [ "section" ] },
+      "else": { "properties": { "section": false, "struct": false } }
     },
     "launch": {
       "type": "object",
@@ -205,9 +211,12 @@
     "stop": {
       "type": "object",
       "additionalProperties": false,
-      "required": [ "command" ],
+      "description": "Мягкая остановка: command или signal — одно из двух.",
+      "oneOf": [ { "required": [ "command" ] }, { "required": [ "signal" ] } ],
       "properties": {
         "command": { "type": "string", "minLength": 1, "description": "Команда консоли, после которой сервер сохраняет мир и закрывается." },
+        "signal": { "enum": [ "ctrlC" ], "description": "ctrlC — Ctrl+C в консоль сервера, для серверов, которые команд не принимают (Valheim). Только с console terminal." },
+        "save": { "type": "string", "minLength": 1, "description": "Команда сохранения перед command — для серверов, которые закрываются без сохранения (Palworld: Save, потом Shutdown). Только вместе с command." },
         "timeoutSeconds": { "type": "integer", "minimum": 1, "maximum": 600, "description": "Сколько ждать закрытия, потом процесс завершается принудительно." }
       }
     },

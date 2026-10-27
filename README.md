@@ -28,9 +28,14 @@
    - [`examples/rust`](examples/rust/addon.json) — выделенный сервер из Steam через SteamCMD, консоль по RCON;
    - [`examples/terraria`](examples/terraria/addon.json) — сервер по https с хэшем, настройки мира, консоль `terminal`
      для сервера, который читает команды по клавишам;
+   - [`examples/valheim`](examples/valheim/addon.json) — SteamCMD, сервер без команд: лог из файла, остановка по Ctrl+C;
+   - [`examples/project-zomboid`](examples/project-zomboid/addon.json) — SteamCMD, Java-сервер запускается напрямую,
+     порты и слоты в его ini, команды в стандартный ввод;
+   - [`examples/palworld`](examples/palworld/addon.json) — SteamCMD, настройки в INI Unreal Engine (`OptionSettings`),
+     консоль по RCON, перед остановкой — сохранение;
    - [`examples/factorio`](examples/factorio/addon.json) — сервер с инструкцией: хост запускает игру сам, приложение
-     подсказывает шаги и открывает порты друзьям; так же устроены [Valheim](examples/valheim/addon.json),
-     [Palworld](examples/palworld/addon.json) и другие встроенные игры.
+     подсказывает шаги и открывает порты друзьям; так же устроены
+     [Minecraft Bedrock](examples/minecraft-bedrock/addon.json) и [7 Days to Die](examples/7-days-to-die/addon.json).
 2. Откройте `addon.json` в VS Code: строка `"$schema"` включает подсказки по полям. Все поля описаны в
    [`docs/format.md`](docs/format.md).
 3. Проверьте файл программой `addon-check` — её можно скачать из

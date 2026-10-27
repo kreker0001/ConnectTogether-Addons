@@ -1,30 +1,64 @@
 {
-  "$schema": "https://raw.githubusercontent.com/kreker0001/ConnectTogether-Addons/main/schema/addon.schema.json",
   "format": 1,
   "id": "palworld",
   "name": "Palworld",
-  "subtitle": "Palworld Dedicated Server",
+  "subtitle": "Palworld Dedicated Server из Steam",
   "icon": "paw",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "author": "Команда ConnectTogether",
-  "ports": [
-    { "id": "game", "protocol": "udp", "default": 8211, "expose": true }
+  "requirements": { "ramGb": 8, "diskGb": 6 },
+  "install": [
+    { "id": "server", "type": "steamcmd", "appId": 2394010 }
   ],
+  "files": [ "Pal/Binaries/Win64/PalServer-Win64-Shipping-Cmd.exe", "DefaultPalWorldSettings.ini" ],
+  "settings": [
+    { "id": "name", "label": "Название сервера", "type": "text", "default": "ConnectTogether" },
+    { "id": "password", "label": "Пароль для входа: пусто — без пароля", "type": "text", "default": "" },
+    { "id": "players", "label": "Игроков", "type": "number", "default": "16", "min": 1, "max": 32 }
+  ],
+  "ports": [
+    { "id": "game", "protocol": "udp", "default": 8211, "expose": true },
+    { "id": "rcon", "protocol": "tcp", "default": 25575 }
+  ],
+  "config": [
+    {
+      "file": "Pal/Saved/Config/WindowsServer/PalWorldSettings.ini",
+      "format": "ini",
+      "template": "DefaultPalWorldSettings.ini",
+      "section": "/Script/Pal.PalGameWorldSettings",
+      "struct": "OptionSettings",
+      "set": {
+        "ServerName": "\"{setting:name}\"",
+        "ServerPassword": "\"{setting:password}\"",
+        "ServerPlayerMaxNum": "{setting:players}",
+        "PublicPort": "{port:game}",
+        "RCONEnabled": "True",
+        "RCONPort": "{port:rcon}",
+        "AdminPassword": "\"{secret:admin}\""
+      }
+    }
+  ],
+  "launch": {
+    "exe": "Pal/Binaries/Win64/PalServer-Win64-Shipping-Cmd.exe",
+    "args": [ "Pal", "-port={port:game}", "-players={setting:players}" ]
+  },
+  "ready": { "port": "game", "timeoutSeconds": 600 },
+  "console": { "type": "rcon", "port": "rcon", "password": "{secret:admin}" },
+  "stop": { "save": "Save", "command": "Shutdown 1", "timeoutSeconds": 60 },
   "join": { "menuPath": [ "Присоединиться к многопользовательской игре", "Поле адреса внизу экрана", "Подключиться" ], "template": "{address}" },
   "guide": {
-    "hint": "Бесплатный выделенный сервер из Steam",
+    "hint": "Сервер ставит ConnectTogether, нужна Palworld из Steam",
     "startSteps": [
-      "В Steam откройте Библиотеку → Инструменты и установите Palworld Dedicated Server — он бесплатный.",
-      "Запустите его из Steam («Play Palworld Dedicated Server») или PalServer.exe из папки сервера; порт оставьте 8211.",
-      "Дождитесь окна сервера: значит, он запустился.",
-      "Вернитесь сюда и нажмите «Проверить снова»."
+      "Нажмите «Запустить мой сервер» — ConnectTogether скачает Palworld Dedicated Server из Steam и запустит его.",
+      "Или запустите сервер сами: в Steam откройте Библиотеку → Инструменты → Palworld Dedicated Server, порт оставьте 8211.",
+      "Дождитесь окна сервера и нажмите «Проверить снова»."
     ],
     "stoppedTips": [
-      "Проверьте, не закрылось ли окно Palworld Dedicated Server.",
-      "Запустите сервер снова — мир сохранится, комната и код останутся прежними.",
+      "Проверьте, не закрылся ли сервер Palworld.",
+      "Запустите его снова — мир сохранится, комната и код останутся прежними.",
       "Нажмите «Проверить снова»."
     ],
     "helpUrl": "https://docs.palworldgame.com/getting-started/deploy-dedicated-server",
-    "helpLabel": "Как запустить сервер Palworld"
+    "helpLabel": "Как устроен сервер Palworld"
   }
 }

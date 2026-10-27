@@ -1,30 +1,65 @@
 {
-  "$schema": "https://raw.githubusercontent.com/kreker0001/ConnectTogether-Addons/main/schema/addon.schema.json",
   "format": 1,
   "id": "project-zomboid",
   "name": "Project Zomboid",
-  "subtitle": "Сервер из главного меню игры",
+  "subtitle": "Project Zomboid Dedicated Server из Steam",
   "icon": "skull",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "author": "Команда ConnectTogether",
+  "requirements": { "ramGb": 6, "diskGb": 8 },
+  "install": [
+    { "id": "server", "type": "steamcmd", "appId": 380870 }
+  ],
+  "files": [ "jre64/bin/java.exe", "java/projectzomboid.jar" ],
+  "settings": [
+    { "id": "players", "label": "Игроков", "type": "number", "default": "16", "min": 1, "max": 100 },
+    { "id": "memory", "label": "Память сервера, ГБ", "type": "number", "default": "4", "min": 2, "max": 32 }
+  ],
   "ports": [
     { "id": "game", "protocol": "udp", "default": 16261, "expose": true },
     { "id": "direct", "protocol": "udp", "default": 16262, "expose": true }
   ],
+  "config": [
+    {
+      "file": "data/Server/connecttogether.ini",
+      "format": "properties",
+      "set": { "DefaultPort": "{port:game}", "UDPPort": "{port:direct}", "MaxPlayers": "{setting:players}", "Public": "false", "UPnP": "false" }
+    }
+  ],
+  "launch": {
+    "exe": "jre64/bin/java.exe",
+    "args": [
+      "-Djava.awt.headless=true", "-Dzomboid.steam=1", "-Dzomboid.znetlog=1",
+      "-Dstdout.encoding=UTF-8", "-Dstderr.encoding=UTF-8",
+      "-XX:+UseZGC", "-XX:-CreateCoredumpOnCrash", "-XX:-OmitStackTraceInFastThrow",
+      "-Xms{setting:memory}G", "-Xmx{setting:memory}G",
+      "-Djava.library.path=natives/",
+      "-cp", "java/;java/projectzomboid.jar",
+      "zombie.network.GameServer",
+      "-statistic", "0",
+      "-cachedir={dir}/data",
+      "-servername", "connecttogether",
+      "-adminpassword", "{secret:admin}",
+      "-port", "{port:game}"
+    ]
+  },
+  "ready": { "log": "SERVER STARTED", "timeoutSeconds": 900 },
+  "console": { "type": "stdio" },
+  "stop": { "command": "quit", "timeoutSeconds": 120 },
   "join": { "menuPath": [ "Присоединиться", "IP и порт — из адреса, имя и пароль — любые", "Подключиться" ], "template": "{address}" },
   "guide": {
-    "hint": "Хост запускает сервер прямо из игры",
+    "hint": "Сервер ставит ConnectTogether, нужна Project Zomboid из Steam",
     "startSteps": [
-      "В главном меню Project Zomboid выберите «Хост» (Host), настройте сервер и запустите его; порт оставьте 16261.",
-      "Дождитесь, пока сервер загрузится и вы окажетесь в игре.",
-      "Вернитесь сюда и нажмите «Проверить снова»."
+      "Нажмите «Запустить мой сервер» — ConnectTogether скачает Project Zomboid Dedicated Server из Steam и запустит его.",
+      "Или запустите сервер из игры: в главном меню «Хост» (Host), порт оставьте 16261.",
+      "Дождитесь, пока сервер загрузится, и нажмите «Проверить снова»."
     ],
     "stoppedTips": [
-      "Проверьте, не вышли ли вы с сервера в главное меню.",
-      "Запустите сервер снова тем же способом — мир, комната и код останутся прежними.",
+      "Проверьте, не закрылся ли сервер Project Zomboid.",
+      "Запустите его снова — мир сохранится, комната и код останутся прежними.",
       "Нажмите «Проверить снова»."
     ],
     "helpUrl": "https://pzwiki.net/wiki/Dedicated_server",
-    "helpLabel": "Как запустить сервер Project Zomboid"
+    "helpLabel": "Как устроен сервер Project Zomboid"
   }
 }

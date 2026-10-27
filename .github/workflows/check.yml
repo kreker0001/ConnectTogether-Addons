@@ -15,7 +15,7 @@ permissions:
 
 env:
   # Релиз с addon-check-linux-x64; новая версия проверки — новый релиз и новое имя здесь
-  ADDON_CHECK: addon-check-1.1
+  ADDON_CHECK: addon-check-1.2
 
 jobs:
   check:
