@@ -1,0 +1,76 @@
+# Зеркало каталога дополнений сообщества: раз в 30 минут (и вручную) берёт одобренные командой дополнения с сервера
+# ConnectTogether, проверяет их addon-check и коммитит в main только при изменениях. Пушит токен из секрета
+# ADDONS_MIRROR_TOKEN (fine-grained, только этот репозиторий, Contents: read and write): токен GITHUB_TOKEN защищённую
+# ветку main не пройдёт.
+name: Зеркало каталога
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+# Одна копия за раз: следующая ждёт, пока закончит предыдущая
+concurrency:
+  group: mirror
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  ADDON_CHECK: addon-check-1.3
+  CT_SERVER: https://connecttogether.ru
+
+jobs:
+  # Пока секрета нет, зеркало молча ждёт его, а не падает каждые 30 минут
+  token:
+    runs-on: ubuntu-latest
+    outputs:
+      ok: ${{ steps.check.outputs.ok }}
+    steps:
+      - id: check
+        env:
+          TOKEN: ${{ secrets.ADDONS_MIRROR_TOKEN }}
+        run: |
+          if [ -n "$TOKEN" ]; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::Секрета ADDONS_MIRROR_TOKEN нет — зеркало каталога ждёт его"
+          fi
+
+  mirror:
+    needs: token
+    if: needs.token.outputs.ok == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          token: ${{ secrets.ADDONS_MIRROR_TOKEN }}
+
+      - name: Каталог с сервера
+        run: python3 scripts/mirror.py --server "$CT_SERVER"
+
+      - name: Скачать addon-check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download "$ADDON_CHECK" --repo "$GITHUB_REPOSITORY" --pattern addon-check-linux-x64 --dir "$RUNNER_TEMP"
+          chmod +x "$RUNNER_TEMP/addon-check-linux-x64"
+
+      # Те же правила, что в «Проверке дополнений»: сервер проверил их своей версией, а здесь — версией репозитория
+      - name: Проверить
+        run: |
+          "$RUNNER_TEMP/addon-check-linux-x64" --reserved minecraft,rust,minecraft-bedrock,valheim,7-days-to-die,project-zomboid,palworld,terraria,v-rising,enshrouded,satisfactory,core-keeper,custom addons
+
+      - name: Закоммитить изменения
+        run: |
+          git add -A addons README.md
+          if git diff --cached --quiet; then
+            echo "Каталог не изменился"
+            exit 0
+          fi
+          git config user.name "ConnectTogether catalog"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Mirror community add-ons from the catalog"
+          git push origin HEAD:main
