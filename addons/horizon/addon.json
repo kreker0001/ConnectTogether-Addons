@@ -1,0 +1,194 @@
+{
+  "format": 1,
+  "id": "horizon",
+  "name": "Horizon",
+  "subtitle": "Сервер для Minecraft Java 26.3 · автоматическая подготовка · Windows x64",
+  "icon": "cube",
+  "version": "1.2.1",
+  "author": "Команда ConnectTogether",
+  "requirements": {
+    "ramGb": 3,
+    "diskGb": 4
+  },
+  "install": [
+    {
+      "id": "server",
+      "type": "http",
+      "url": "https://github.com/horizon-rust/horizon/releases/download/nightly-2026-11-05/horizon-windows-x64.zip",
+      "sha256": "02b2de1fccc88e4e4c0a4ac23f8318ed3be63120f72d2bec1968bbd612c6cdd0",
+      "extract": true,
+      "stripRoot": true
+    },
+    {
+      "id": "java",
+      "type": "http",
+      "url": "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.4.1%2B1/OpenJDK25U-jre_x64_windows_hotspot_25.0.4.1_1.zip",
+      "sha256": "4c95451cea98556def2c54f7782933f52a26d4a36bd85e1d59f0364464828b07",
+      "extract": true,
+      "stripRoot": true,
+      "shared": true
+    },
+    {
+      "id": "minecraft-server",
+      "type": "http",
+      "url": "https://piston-data.mojang.com/v1/objects/33680f5f2ac32864d6d7cf5e56a705fdb3e05f4c/server.jar",
+      "sha1": "33680f5f2ac32864d6d7cf5e56a705fdb3e05f4c",
+      "file": "server.jar"
+    },
+    {
+      "id": "wrapper",
+      "type": "http",
+      "url": "https://github.com/kreker0001/ConnectTogether-Addons/releases/download/Horizon/ct-horizon-wrapper-1.1.0-win-x64.zip",
+      "sha256": "785f16f5664ae54c1c6da02e17defac2210e24c0e684f339417ce920c40c5ced",
+      "extract": true
+    }
+  ],
+  "eula": {
+    "url": "https://www.minecraft.net/en-us/eula",
+    "file": "eula.txt",
+    "line": "eula=true"
+  },
+  "files": [
+    "ConnectTogether.Horizon.exe",
+    "horizon-client.exe",
+    "horizon-prepare.exe",
+    "research-lock.json",
+    "server.jar"
+  ],
+  "settings": [
+    {
+      "id": "whitelist",
+      "label": "Белый список (whitelist)",
+      "type": "bool",
+      "default": "false"
+    },
+    {
+      "id": "online-mode",
+      "label": "Проверять Minecraft-аккаунты (online-mode)",
+      "type": "bool",
+      "default": "true"
+    },
+    {
+      "id": "name",
+      "label": "Название сервера",
+      "type": "text",
+      "default": "Horizon — ConnectTogether"
+    },
+    {
+      "id": "players",
+      "label": "Игроков",
+      "type": "number",
+      "default": "8",
+      "min": 1,
+      "max": 100
+    },
+    {
+      "id": "view-distance",
+      "label": "Дальность прорисовки, чанков",
+      "type": "number",
+      "default": "8",
+      "min": 2,
+      "max": 32
+    },
+    {
+      "id": "simulation-distance",
+      "label": "Дальность симуляции, чанков",
+      "type": "number",
+      "default": "6",
+      "min": 2,
+      "max": 32
+    },
+    {
+      "id": "minecraft-dir",
+      "label": "Папка Minecraft (пусто — найти автоматически)",
+      "type": "text",
+      "default": ""
+    },
+    {
+      "id": "memory",
+      "label": "Лимит памяти сервера, ГБ (0 — без лимита)",
+      "type": "number",
+      "default": "0",
+      "min": 0,
+      "max": 128
+    }
+  ],
+  "ports": [
+    {
+      "id": "game",
+      "protocol": "tcp",
+      "default": 25565,
+      "expose": true
+    }
+  ],
+  "config": [
+    {
+      "file": "server.properties",
+      "format": "properties",
+      "set": {
+        "server-port": "{port:game}",
+        "server-ip": "127.0.0.1",
+        "motd": "{setting:name}",
+        "max-players": "{setting:players}",
+        "online-mode": "{setting:online-mode}",
+        "white-list": "{setting:whitelist}",
+        "level-name": "world",
+        "view-distance": "{setting:view-distance}",
+        "simulation-distance": "{setting:simulation-distance}",
+        "enable-rcon": "false",
+        "enable-query": "false"
+      }
+    }
+  ],
+  "launch": {
+    "exe": "ConnectTogether.Horizon.exe",
+    "args": [
+      "--server-dir",
+      "{dir}",
+      "--port",
+      "{port:game}",
+      "--java-home",
+      "{install:java}",
+      "--minecraft-dir",
+      "{setting:minecraft-dir}",
+      "--memory-gb",
+      "{setting:memory}"
+    ]
+  },
+  "ready": {
+    "log": "^(?!\\[CT Horizon\\]).*Done \\([0-9.,]+s\\)!",
+    "timeoutSeconds": 3600
+  },
+  "console": {
+    "type": "stdio"
+  },
+  "stop": {
+    "command": "stop",
+    "timeoutSeconds": 120
+  },
+  "join": {
+    "menuPath": [
+      "Сетевая игра",
+      "Прямое подключение"
+    ],
+    "template": "{address}"
+  },
+  "guide": {
+    "hint": "Сервер и ресурсы готовятся автоматически при первом запуске. Нужна установленная и запущенная один раз Minecraft Java 26.3.",
+    "startSteps": [
+      "Установите свою Minecraft Java 26.3 и запустите её хотя бы раз через официальный лаунчер.",
+      "Нажмите «Установить» в ConnectTogether: скачаются Horizon, Java, server.jar и программа автоматической подготовки.",
+      "Прочитайте и примите Minecraft EULA, затем нажмите «Запустить». Первая подготовка может занять несколько минут.",
+      "Если игра установлена не в стандартную папку, укажите её в настройке «Папка Minecraft».",
+      "После готовности создайте комнату и войдите через Minecraft Java 26.3 со своим Microsoft-аккаунтом.",
+      "Неофициальный продукт. Не одобрен Mojang или Microsoft и не связан с ними."
+    ],
+    "stoppedTips": [
+      "Причина ошибки подготовки или запуска указана в логе. Убедитесь, что Minecraft Java 26.3 установлена и запускалась хотя бы раз.",
+      "При нестандартной установке проверьте настройку «Папка Minecraft». В ней должна быть папка versions/26.3.",
+      "Команда stop отменяет подготовку или сохраняет мир и останавливает работающий сервер."
+    ],
+    "helpUrl": "https://playhorizon.dev/docs/hosting",
+    "helpLabel": "Документация сервера Horizon"
+  }
+}
