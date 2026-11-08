@@ -107,7 +107,34 @@ def write_bundle(base, base_files, upstream, upstream_files, destination):
                 result.writestr(ZipInfo(path), archive.read(entry), compress_type=ZIP_DEFLATED, compresslevel=6)
 
 
+def add_server_settings(manifest):
+    java_example = Path(__file__).resolve().parents[1] / "examples" / "minecraft" / "addon.json"
+    java = json.loads(java_example.read_text(encoding="utf-8"))
+    java_settings = {setting["id"]: setting for setting in java["settings"]}
+    config = next(item for item in manifest["config"] if item["file"] == "server.properties"
+                  and item["format"] == "properties")["set"]
+    settings = manifest.setdefault("settings", [])
+    existing = {setting["id"] for setting in settings}
+    config["enable-query"] = "false"
+    for property_name, setting_id in (
+        ("level-seed", "seed"),
+        ("gamemode", "gamemode"),
+        ("difficulty", "difficulty"),
+        ("allow-flight", "allow-flight"),
+        ("force-gamemode", "force-gamemode"),
+        ("spawn-protection", "spawn-protection"),
+        ("require-resource-pack", "require-resource-pack"),
+        ("resource-pack", "resource-pack"),
+        ("resource-pack-prompt", "resource-pack-prompt"),
+    ):
+        if setting_id not in existing:
+            settings.append(java_settings[setting_id])
+        config[property_name] = f"{{setting:{setting_id}}}"
+
+
 def build(published, upstream_tag, asset, output, scratch):
+    manifest = copy.deepcopy(published)
+    add_server_settings(manifest)
     server = next(item for item in published["install"] if item["id"] == "server")
     server_jar = next(item for item in published["install"] if item["id"] == "minecraft-server")
     if {item["id"] for item in published["install"]} != {"server", "minecraft-server"}:
@@ -139,7 +166,7 @@ def build(published, upstream_tag, asset, output, scratch):
         if (lock["version"], lock["java_major"], lock["server_sha1"]) != ("26.3", 25, server_jar["sha1"]):
             raise ValueError("Новый релиз требует другую версию Minecraft, Java или server.jar. Проверьте обёртку.")
         installed = {name for name in base_files if name != WRAPPER.casefold() and not name.startswith(NOTICES)}
-        if installed == upstream_files.keys() and all(
+        if manifest == published and installed == upstream_files.keys() and all(
             base_files[name].CRC == entry.CRC and base_files[name].file_size == entry.file_size
             for name, entry in upstream_files.items()
         ):
@@ -153,10 +180,9 @@ def build(published, upstream_tag, asset, output, scratch):
 
     with bundle_path.open("rb") as stream:
         bundle_sha = hashlib.file_digest(stream, "sha256").hexdigest()
-    manifest = copy.deepcopy(published)
+    key = hashlib.sha256(json.dumps([manifest, upstream_sha, bundle_sha], sort_keys=True).encode()).hexdigest()[:20]
     major, minor, patch = map(int, manifest["version"].split("."))
     manifest["version"] = f"{major}.{minor}.{patch + 1}"
-    key = hashlib.sha256(json.dumps([published, upstream_sha, bundle_sha], sort_keys=True).encode()).hexdigest()[:20]
     tag = f"horizon-addon-{manifest['version']}-{key}"
     candidate = next(item for item in manifest["install"] if item["id"] == "server")
     candidate.update(url=f"{RELEASE_URL}{tag}/{BUNDLE}", sha256=bundle_sha, extract=True)
