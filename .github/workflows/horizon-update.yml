@@ -1,0 +1,65 @@
+name: Обновление Horizon
+
+on:
+  schedule:
+    - cron: "13,43 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: horizon-update
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  horizon:
+    if: github.repository == 'kreker0001/ConnectTogether-Addons' && github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+      ADDON_CHECK: addon-check-1.3
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Собрать ZIP и манифест Horizon
+        run: python3 scripts/horizon_update.py "$RUNNER_TEMP/horizon-update"
+
+      - name: Проверить манифест и опубликовать кандидат в Releases
+        run: |
+          output="$RUNNER_TEMP/horizon-update"
+          if [ ! -f "$output/release-tag" ]; then
+            exit 0
+          fi
+          tag=$(cat "$output/release-tag")
+          gh release download "$ADDON_CHECK" --repo "$GITHUB_REPOSITORY" --pattern addon-check-linux-x64 --dir "$RUNNER_TEMP"
+          chmod +x "$RUNNER_TEMP/addon-check-linux-x64"
+          "$RUNNER_TEMP/addon-check-linux-x64" "$output/check"
+
+          if ! gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json isDraft,assets > "$output/release.json"; then
+            gh release create "$tag" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+              --draft --prerelease --title "$tag" --notes-file "$output/release-notes.md"
+            gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json isDraft,assets > "$output/release.json"
+          fi
+
+          draft=$(jq -r .isDraft "$output/release.json")
+          mkdir "$output/verify"
+          for name in horizon-windows-x64.zip Horizon.ctaddon; do
+            existing=$(jq -r --arg name "$name" '.assets[] | select(.name == $name) | .name' "$output/release.json")
+            if [ -z "$existing" ] && [ "$draft" = true ]; then
+              gh release upload "$tag" "$output/$name" --repo "$GITHUB_REPOSITORY"
+            fi
+            gh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "$name" --dir "$output/verify"
+            cmp "$output/$name" "$output/verify/$name"
+          done
+
+          if [ "$draft" = true ]; then
+            gh release edit "$tag" --repo "$GITHUB_REPOSITORY" --draft=false --prerelease --latest=false
+          fi
+          url="https://github.com/$GITHUB_REPOSITORY/releases/download/$tag/horizon-windows-x64.zip"
+          curl --fail --silent --show-error --location --retry 3 --max-time 180 --output "$output/published.zip" "$url"
+          cmp "$output/horizon-windows-x64.zip" "$output/published.zip"
+          printf '[Готовый кандидат Horizon](https://github.com/%s/releases/tag/%s)\n' "$GITHUB_REPOSITORY" "$tag" >> "$GITHUB_STEP_SUMMARY"
