@@ -63,7 +63,7 @@
 <!-- addons:start -->
 | Игра | Папка | Вид | Версия | Автор |
 |---|---|---|---|---|
-| Horizon | [`horizon`](addons/horizon/addon.json) | ставит сервер | 1.2.1 | Команда ConnectTogether |
+| Horizon | [`horizon`](addons/horizon/addon.json) | ставит сервер | 1.2.3 | Команда ConnectTogether |
 | Моя игра | [`123`](addons/123/addon.json) | сервер с инструкцией | 1.0.0 | By./UDAV TimeRust |
 <!-- addons:end -->
 
