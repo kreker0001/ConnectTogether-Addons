@@ -4,7 +4,7 @@
   "name": "Horizon",
   "subtitle": "Сервер для Minecraft Java 26.3 · автоматическая подготовка · Windows x64",
   "icon": "cube",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "author": "Команда ConnectTogether",
   "requirements": {
     "ramGb": 3,
@@ -111,6 +111,61 @@
       "default": "0",
       "min": 0,
       "max": 128
+    },
+    {
+      "id": "seed",
+      "label": "Сид нового мира (пусто — случайный)",
+      "type": "text",
+      "default": ""
+    },
+    {
+      "id": "gamemode",
+      "label": "Режим игры (survival, creative, adventure, spectator)",
+      "type": "text",
+      "default": "survival"
+    },
+    {
+      "id": "difficulty",
+      "label": "Сложность (peaceful, easy, normal, hard)",
+      "type": "text",
+      "default": "easy"
+    },
+    {
+      "id": "allow-flight",
+      "label": "Разрешить полёт",
+      "type": "bool",
+      "default": "false"
+    },
+    {
+      "id": "force-gamemode",
+      "label": "Применять режим сервера при входе",
+      "type": "bool",
+      "default": "false"
+    },
+    {
+      "id": "spawn-protection",
+      "label": "Радиус защиты спауна, блоков (0 — выключено)",
+      "type": "number",
+      "default": "16",
+      "min": 0
+    },
+    {
+      "id": "require-resource-pack",
+      "label": "Требовать пакет ресурсов",
+      "type": "bool",
+      "default": "false"
+    },
+    {
+      "id": "resource-pack",
+      "label": "Прямая ссылка на ZIP пакета ресурсов",
+      "type": "text",
+      "default": ""
+    },
+    {
+      "id": "resource-pack-prompt",
+      "label": "Сообщение о пакете ресурсов (JSON, например \"Скачайте пакет\")",
+      "type": "text",
+      "default": ""
     }
   ],
   "ports": [
@@ -136,7 +191,16 @@
         "view-distance": "{setting:view-distance}",
         "simulation-distance": "{setting:simulation-distance}",
         "enable-rcon": "false",
-        "enable-query": "false"
+        "enable-query": "false",
+        "level-seed": "{setting:seed}",
+        "gamemode": "{setting:gamemode}",
+        "difficulty": "{setting:difficulty}",
+        "allow-flight": "{setting:allow-flight}",
+        "force-gamemode": "{setting:force-gamemode}",
+        "spawn-protection": "{setting:spawn-protection}",
+        "require-resource-pack": "{setting:require-resource-pack}",
+        "resource-pack": "{setting:resource-pack}",
+        "resource-pack-prompt": "{setting:resource-pack-prompt}"
       }
     }
   ],
