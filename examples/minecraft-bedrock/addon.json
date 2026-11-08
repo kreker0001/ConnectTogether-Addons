@@ -15,6 +15,9 @@
     "hint": "Bedrock Dedicated Server с minecraft.net",
     "startSteps": [
       "Скачайте Bedrock Dedicated Server для Windows с minecraft.net и распакуйте его в отдельную папку.",
+      "До запуска откройте server.properties: max-players — число игроков, gamemode — survival, creative или adventure, difficulty — peaceful, easy, normal или hard.",
+      "Там же: allow-list — белый список, online-mode — проверка аккаунтов, force-gamemode — применять режим сервера при входе, texturepack-required — требовать пакеты ресурсов мира. Используйте true или false.",
+      "Для нового мира задайте level-seed. Чтобы добавить игрока в белый список, в консоли сервера используйте allowlist add <Gamertag>.",
       "Запустите bedrock_server.exe и дождитесь в его окне строки «Server started.».",
       "Вернитесь сюда и нажмите «Проверить снова»."
     ],

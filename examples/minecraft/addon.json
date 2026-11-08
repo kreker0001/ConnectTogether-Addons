@@ -32,6 +32,16 @@
     { "id": "name", "label": "Название сервера", "type": "text", "default": "Сервер ConnectTogether" },
     { "id": "slots", "label": "Игроков", "type": "number", "default": "10", "min": 1, "max": 100 },
     { "id": "online-mode", "label": "Только лицензионные аккаунты", "type": "bool", "default": "true" },
+    { "id": "whitelist", "label": "Белый список (whitelist)", "type": "bool", "default": "false" },
+    { "id": "seed", "label": "Сид нового мира (пусто — случайный)", "type": "text", "default": "" },
+    { "id": "gamemode", "label": "Режим игры (survival, creative, adventure, spectator)", "type": "text", "default": "survival" },
+    { "id": "difficulty", "label": "Сложность (peaceful, easy, normal, hard)", "type": "text", "default": "easy" },
+    { "id": "allow-flight", "label": "Разрешить полёт", "type": "bool", "default": "false" },
+    { "id": "force-gamemode", "label": "Применять режим сервера при входе", "type": "bool", "default": "false" },
+    { "id": "spawn-protection", "label": "Радиус защиты спауна, блоков (0 — выключено)", "type": "number", "default": "16", "min": 0 },
+    { "id": "require-resource-pack", "label": "Требовать пакет ресурсов", "type": "bool", "default": "false" },
+    { "id": "resource-pack", "label": "Прямая ссылка на ZIP пакета ресурсов", "type": "text", "default": "" },
+    { "id": "resource-pack-prompt", "label": "Сообщение о пакете ресурсов (JSON, например \"Скачайте пакет\")", "type": "text", "default": "" },
     { "id": "memory", "label": "Память сервера, ГБ", "type": "number", "default": "2", "min": 1, "max": 32 }
   ],
   "ports": [
@@ -45,7 +55,17 @@
         "server-port": "{port:game}",
         "motd": "{setting:name}",
         "max-players": "{setting:slots}",
-        "online-mode": "{setting:online-mode}"
+        "online-mode": "{setting:online-mode}",
+        "white-list": "{setting:whitelist}",
+        "level-seed": "{setting:seed}",
+        "gamemode": "{setting:gamemode}",
+        "difficulty": "{setting:difficulty}",
+        "allow-flight": "{setting:allow-flight}",
+        "force-gamemode": "{setting:force-gamemode}",
+        "spawn-protection": "{setting:spawn-protection}",
+        "require-resource-pack": "{setting:require-resource-pack}",
+        "resource-pack": "{setting:resource-pack}",
+        "resource-pack-prompt": "{setting:resource-pack-prompt}"
       }
     }
   ],
