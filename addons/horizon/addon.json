@@ -14,19 +14,9 @@
     {
       "id": "server",
       "type": "http",
-      "url": "https://github.com/horizon-rust/horizon/releases/download/nightly-2026-11-05/horizon-windows-x64.zip",
-      "sha256": "0e3157a74c56249573f42624d64bc87774324dec1cd20ba6518c784b7293eda0",
-      "extract": true,
-      "stripRoot": true
-    },
-    {
-      "id": "java",
-      "type": "http",
-      "url": "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.4.1%2B1/OpenJDK25U-jre_x64_windows_hotspot_25.0.4.1_1.zip",
-      "sha256": "4c95451cea98556def2c54f7782933f52a26d4a36bd85e1d59f0364464828b07",
-      "extract": true,
-      "stripRoot": true,
-      "shared": true
+      "url": "https://raw.githubusercontent.com/kreker0001/ConnectTogether-Addons/0ee47198cad68563c8a4b0ba6e37406c3095c0b5/ct-horizon-server-1.2.4-win-x64.zip",
+      "sha256": "104d8f8a50da586457d1d6b955895d3f0cf07042b08a01828e9e2308add74511",
+      "extract": true
     },
     {
       "id": "minecraft-server",
@@ -34,13 +24,6 @@
       "url": "https://piston-data.mojang.com/v1/objects/33680f5f2ac32864d6d7cf5e56a705fdb3e05f4c/server.jar",
       "sha1": "33680f5f2ac32864d6d7cf5e56a705fdb3e05f4c",
       "file": "server.jar"
-    },
-    {
-      "id": "wrapper",
-      "type": "http",
-      "url": "https://github.com/kreker0001/ConnectTogether-Addons/releases/download/Horizon-1.1/ct-horizon-wrapper-1.1.1-win-x64.zip?download=1",
-      "sha256": "41f65d2023b3f2c0e39879ba135fda26a497f13b9e4c9b918ba5d8fef3cf7b05",
-      "extract": true
     }
   ],
   "eula": {
@@ -111,61 +94,6 @@
       "default": "0",
       "min": 0,
       "max": 128
-    },
-    {
-      "id": "seed",
-      "label": "Сид нового мира (пусто — случайный)",
-      "type": "text",
-      "default": ""
-    },
-    {
-      "id": "gamemode",
-      "label": "Режим игры (survival, creative, adventure, spectator)",
-      "type": "text",
-      "default": "survival"
-    },
-    {
-      "id": "difficulty",
-      "label": "Сложность (peaceful, easy, normal, hard)",
-      "type": "text",
-      "default": "easy"
-    },
-    {
-      "id": "allow-flight",
-      "label": "Разрешить полёт",
-      "type": "bool",
-      "default": "false"
-    },
-    {
-      "id": "force-gamemode",
-      "label": "Применять режим сервера при входе",
-      "type": "bool",
-      "default": "false"
-    },
-    {
-      "id": "spawn-protection",
-      "label": "Радиус защиты спауна, блоков (0 — выключено)",
-      "type": "number",
-      "default": "16",
-      "min": 0
-    },
-    {
-      "id": "require-resource-pack",
-      "label": "Требовать пакет ресурсов",
-      "type": "bool",
-      "default": "false"
-    },
-    {
-      "id": "resource-pack",
-      "label": "Прямая ссылка на ZIP пакета ресурсов",
-      "type": "text",
-      "default": ""
-    },
-    {
-      "id": "resource-pack-prompt",
-      "label": "Сообщение о пакете ресурсов (JSON, например \"Скачайте пакет\")",
-      "type": "text",
-      "default": ""
     }
   ],
   "ports": [
@@ -191,16 +119,7 @@
         "view-distance": "{setting:view-distance}",
         "simulation-distance": "{setting:simulation-distance}",
         "enable-rcon": "false",
-        "enable-query": "false",
-        "level-seed": "{setting:seed}",
-        "gamemode": "{setting:gamemode}",
-        "difficulty": "{setting:difficulty}",
-        "allow-flight": "{setting:allow-flight}",
-        "force-gamemode": "{setting:force-gamemode}",
-        "spawn-protection": "{setting:spawn-protection}",
-        "require-resource-pack": "{setting:require-resource-pack}",
-        "resource-pack": "{setting:resource-pack}",
-        "resource-pack-prompt": "{setting:resource-pack-prompt}"
+        "enable-query": "false"
       }
     }
   ],
@@ -211,8 +130,6 @@
       "{dir}",
       "--port",
       "{port:game}",
-      "--java-home",
-      "{install:java}",
       "--minecraft-dir",
       "{setting:minecraft-dir}",
       "--memory-gb",
@@ -241,7 +158,7 @@
     "hint": "Сервер и ресурсы готовятся автоматически при первом запуске. Нужна установленная и запущенная один раз Minecraft Java 26.3.",
     "startSteps": [
       "Установите свою Minecraft Java 26.3 и запустите её хотя бы раз через официальный лаунчер.",
-      "Нажмите «Установить» в ConnectTogether: скачаются Horizon, Java, server.jar и программа автоматической подготовки.",
+      "Нажмите «Установить» в ConnectTogether. Скачаются Horizon с обёрткой и официальный server.jar. Java берётся из установленной Minecraft Java 26.3.",
       "Прочитайте и примите Minecraft EULA, затем нажмите «Запустить». Первая подготовка может занять несколько минут.",
       "Если игра установлена не в стандартную папку, укажите её в настройке «Папка Minecraft».",
       "После готовности создайте комнату и войдите через Minecraft Java 26.3 со своим Microsoft-аккаунтом.",
