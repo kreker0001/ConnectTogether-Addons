@@ -1,0 +1,91 @@
+{
+  "$schema": "https://raw.githubusercontent.com/kreker0001/ConnectTogether-Addons/main/schema/addon.schema.json",
+  "format": 1,
+  "id": "gtnh",
+  "name": "GT New Horizons",
+  "subtitle": "Minecraft 1.7.10 — сервер модпака 2.9.0",
+  "icon": "cube",
+  "version": "1.0.0",
+  "author": "frmeister",
+  "requirements": { "ramGb": 8, "diskGb": 3 },
+  "install": [
+    {
+      "id": "java",
+      "type": "http",
+      "url": "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.4.1%2B1/OpenJDK25U-jre_x64_windows_hotspot_25.0.4.1_1.zip",
+      "sha256": "4c95451cea98556def2c54f7782933f52a26d4a36bd85e1d59f0364464828b07",
+      "extract": true,
+      "stripRoot": true,
+      "shared": true
+    },
+    {
+      "id": "server",
+      "type": "http",
+      "url": "https://downloads.gtnewhorizons.com/ServerPacks/GT_New_Horizons_2.9.0_Server_Java_17-26.zip",
+      "sha256": "0ab3de26e4d0de80a2df286916570d9af31c3394cb1f44aee8b9aa1f2ead9831",
+      "extract": true
+    }
+  ],
+  "eula": { "url": "https://aka.ms/MinecraftEULA", "file": "eula.txt", "line": "eula=true" },
+  "files": [ "lwjgl3ify-forgePatches.jar", "java9args.txt", "minecraft_server.1.7.10.jar" ],
+  "settings": [
+    { "id": "name", "label": "Название сервера", "type": "text", "default": "GT New Horizons — ConnectTogether" },
+    { "id": "slots", "label": "Игроков", "type": "number", "default": "10", "min": 1, "max": 100 },
+    { "id": "online-mode", "label": "Только лицензионные аккаунты", "type": "bool", "default": "true" },
+    { "id": "whitelist", "label": "Белый список (whitelist)", "type": "bool", "default": "false" },
+    { "id": "seed", "label": "Сид нового мира (пусто — случайный)", "type": "text", "default": "" },
+    { "id": "difficulty", "label": "Сложность (0 — мирная, 1 — лёгкая, 2 — нормальная, 3 — сложная)", "type": "number", "default": "3", "min": 0, "max": 3 },
+    { "id": "pvp", "label": "PvP", "type": "bool", "default": "true" },
+    { "id": "view-distance", "label": "Дальность прорисовки, чанков", "type": "number", "default": "8", "min": 3, "max": 16 },
+    { "id": "memory", "label": "Память сервера, ГБ (модпаку нужно от 6)", "type": "number", "default": "6", "min": 4, "max": 32 }
+  ],
+  "ports": [
+    { "id": "game", "protocol": "tcp", "default": 25565, "expose": true }
+  ],
+  "config": [
+    {
+      "file": "server.properties",
+      "format": "properties",
+      "set": {
+        "server-port": "{port:game}",
+        "motd": "{setting:name}",
+        "max-players": "{setting:slots}",
+        "online-mode": "{setting:online-mode}",
+        "white-list": "{setting:whitelist}",
+        "level-seed": "{setting:seed}",
+        "difficulty": "{setting:difficulty}",
+        "pvp": "{setting:pvp}",
+        "view-distance": "{setting:view-distance}"
+      }
+    }
+  ],
+  "launch": {
+    "exe": "{install:java}/bin/java.exe",
+    "args": [
+      "-Xms{setting:memory}G",
+      "-Xmx{setting:memory}G",
+      "-Dfml.readTimeout=180",
+      "-Duser.language=en",
+      "-Dstdout.encoding=UTF-8",
+      "-Dstderr.encoding=UTF-8",
+      "@java9args.txt",
+      "-jar",
+      "lwjgl3ify-forgePatches.jar",
+      "nogui"
+    ]
+  },
+  "ready": { "log": "Done \\([0-9.,]+s\\)!", "timeoutSeconds": 1800 },
+  "console": { "type": "stdio" },
+  "stop": { "command": "stop", "timeoutSeconds": 180 },
+  "join": { "menuPath": [ "Сетевая игра", "Прямое подключение" ], "template": "{address}" },
+  "guide": {
+    "hint": "Сервер модпака GT New Horizons 2.9.0. Друзьям нужен клиент той же версии",
+    "stoppedTips": [
+      "Первый запуск идёт несколько минут: сервер загружает сотни модов и создаёт мир.",
+      "Если серверу не хватает памяти, увеличьте «Память сервера» в настройках дополнения и запустите его снова.",
+      "У всех игроков должен стоять клиент GT New Horizons 2.9.0 — с другой версией модпака зайти не получится."
+    ],
+    "helpUrl": "https://wiki.gtnewhorizons.com/wiki/Server_Setup",
+    "helpLabel": "Как настроить сервер GT New Horizons"
+  }
+}

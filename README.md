@@ -63,6 +63,7 @@
 <!-- addons:start -->
 | Игра | Папка | Вид | Версия | Автор |
 |---|---|---|---|---|
+| GT New Horizons | [`gtnh`](addons/gtnh/addon.json) | ставит сервер | 1.0.0 | frmeister |
 | Horizon | [`horizon`](addons/horizon/addon.json) | ставит сервер | 1.2.4 | Команда ConnectTogether |
 | Моя игра | [`123`](addons/123/addon.json) | сервер с инструкцией | 1.0.0 | By./UDAV TimeRust |
 <!-- addons:end -->
