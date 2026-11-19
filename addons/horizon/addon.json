@@ -4,7 +4,7 @@
   "name": "Horizon",
   "subtitle": "Сервер для Minecraft Java 26.3 · автоматическая подготовка · Windows x64",
   "icon": "cube",
-  "version": "1.2.7",
+  "version": "1.2.9",
   "author": "Команда ConnectTogether",
   "requirements": {
     "ramGb": 3,
@@ -14,8 +14,8 @@
     {
       "id": "server",
       "type": "http",
-      "url": "https://github.com/kreker0001/ConnectTogether-Addons/releases/download/horizon-addon-1.2.7-4acd7b6af7b7cdb899e4/horizon-windows-x64.zip",
-      "sha256": "3f5bcbf149cb2c0c9f65131c80da666de6c65c5634f58c79f4e6d90c57b9f181",
+      "url": "https://github.com/kreker0001/ConnectTogether-Addons/releases/download/horizon-addon-1.2.9-9ba7dabcd727a91f9ef2/horizon-windows-x64.zip",
+      "sha256": "cd05cfbe44cdc1fa2e4d566c9a5ba74282bda09b54a2325db20b5db7642fa033",
       "extract": true
     },
     {
